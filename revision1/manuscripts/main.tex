@@ -216,11 +216,12 @@
     achieved DW-MRI with sub-millimeter in-plane resolution
     and maximal $b$-value \SI{2000}{s/mm^2} at \SI{3}{\tesla} \citep{chen_2013_muse}.
     In MUSE, four shots (i.e., four-fold undersampling per shot)
-    are used because of two reasons.
+    are \hl{used} because of two reasons. \marginnote{R1.20}
     First, the high spatial resolution requires the use of multi-shot acquisition,
     which employs a shorter echo train length per shot.
     This allows for reduced echo time and less spatial distortion.
-    Second, MUSE employs parallel imaging to reconstruct single-shot images
+    Second, MUSE employs parallel imaging to reconstruct
+    \hl{single shot images} \marginnote{R3.16}
     for the extraction of shot-to-shot phase variation,
     and four-fold undersampling per shot is achievable in parallel imaging.
 
@@ -262,7 +263,7 @@
     and construction of regularization terms (e.g.~LLR) as proximal operators.
     We compared our proposed method with
     state-of-the-art multi-shot reconstruction techniques,
-    i.e.,~MUSE and MUSSELS,
+    specifically MUSE and MUSSELS,
     as well as
     \marginnote{R3.20}
     \hl{an established local PCA-based DW image denoising algorithm},
@@ -294,7 +295,8 @@
     Every diffusion direction is distinct from others,
     thereby constructing a non-colinear sampling pattern.
     This $k_y$-shifted non-colinear diffusion encoding exploits
-    complementary $k$-$q$-space sampling. Its properties are two-fold.
+    complementary $k$-$q$-space sampling.
+    Its \hl{properties} are two-fold. \marginnote{R1.21}
     First, the $k_y$-shifting is linear and retains consistent echo spacing.
     Second, DW images share anatomical structures but differ in image contrast
     depending on $b$-values and diffusion directions,
@@ -369,7 +371,8 @@
     \subsubsection{Three-shell diffusion acquisition at \hl{\mbox{\SI{1}{\cubic\milli\meter} isotropic resolution}}}
     \label{SEC:ACQ1.0mm}
     This protocol employed the same FOV, shots,
-    in-plane undersampling, and partial Fourier as in \cref{SEC:ACQ1.2mm}.
+    in-plane undersampling, and partial Fourier
+    as \hl{in} \cref{SEC:ACQ1.2mm}. \marginnote{R1.22}
     Other parameters were base resolution 214, 114 slices, bandwidth \SI{1460}{Hz/Pixel},
     echo spacing \SI{0.81}{\milli\second}, TE \SI{66}{\milli\second}, TR \SI{5200}{ms},
     and multi-band factor $3$. This results in $8.7 \times 3$ fold undersampling per shot.
@@ -381,7 +384,8 @@
     $b_0$ \hl{acquisitions} were interspersed every ten diffusion directions.
     This corresponds to a total of 126 DW acquisition volumes and
     \hl{\mbox{\SI{22.42}{\minute}}} scan time.
-    This protocol will be used to demonstrate the capabilities of JETS-EPI in achieving high
+    This protocol \hl{was used to} demonstrate \marginnote{R1.23}
+    the capabilities of JETS-EPI in achieving high
     spatial-angular-temporal resolution.
 
     \begin{figure}
@@ -402,11 +406,13 @@
 
     % ============================== %
     \subsection{Forward modeling}
-    Our proposed acquisition method yields multi-dimensional but
-    slice collapsed $k$-space data $\mathbf{y}_{c,q,s}$,
+    Our proposed acquisition method yields
+    multi-dimensional \hl{multi-band} \marginnote{R1.25}
+    $k$-space data $\mathbf{y}_{c,q,s}$,
     where $c$, $q$, $s$ denotes the index of the coil sensitivity map,
     the diffusion encoding, and the shot, respectively.
-    Acquisition modeling needs to consider several aspects.
+    \hl{Acquisition modeling needs to consider several aspects}.
+    \marginnote{R1.26}
 
     First, the acquired $k$-space data $\mathbf{y}$ is mapped from
     individual shot images $\mathbf{x}_{q,s,z}$ via the forward model,
@@ -419,27 +425,32 @@
     by a set of coil sensitivity maps ($\mathbf{S}$) and Fourier transformed ($\mathbf{F}$).
     The output is then point-wise multiplied by the multi-slice phase map ($\mathbf{\Theta}$)
     with $z$ the slice index in simultaneously excited slices.
-    This operator shifts individual slice along the phase-encoding direction
+    This operator shifts individual slice
+    along the phase-encoding direction
     via varying phase modulation \citep{breuer_2005_caipi}.
     The SMS $k$-space data is then
     summed (collapsed, $\mathbf{\Sigma}$) along the slice dimension and
     masked (point-wise multiplied, $\mathbf{P}$) by
-    the sampling pattern of each diffusion encoding and shot.
+    the sampling pattern of \hl{each} diffusion encoding and shot.
+    \marginnote{R1.27}
 
     Second, for diffusion MRI based on multi-shot EPI,
-    multiple shots acquired for a given diffusion encoding
+    \hl{multiple shots acquired for a given} diffusion encoding
+    \marginnote{R1.28}
     need to be combined as one DW image ($\mathbf{\tilde{x}}$).
-    A possibility is to perform magnitude average \citep{chen_2013_muse}
+    \marginnote{R1.29}
+    \hl{A possibility} is to perform magnitude average \citep{chen_2013_muse}
     or root-sum-squares (RSS) \citep{mani_2017_mussels}
     of shot images.
     This method is robust to \hl{in-plane} motion, \marginnote{R3.27}
     but sub-optimal with respect to SNR
     \citep{guhaniyogi_2016_amuse}.
-    Alternatively, shot combination can be done via shot-to-shot phase variation correction
+    Alternatively, shot combination \hl{can be done} \marginnote{R1.30}
+    via shot-to-shot phase variation correction
     \citep{liu_2005_moco_diff,chen_2013_muse}.
-    This can be incorporated to our formulation as point-wise multiplication
+    \hl{This can be incorporated to our formulation} \marginnote{R1.31}
+    as point-wise multiplication
     between the shot-to-shot phase variation ($\mathbf{\Phi}$) and
-    % FK: Can you explain how $\mathbf{\Phi}$ is obtained during the measurement?
     the DW image ($\mathbf{\tilde{x}}$),
     \begin{equation}
          \mathbf{x}_{q,s,z} = \mathbf{\Phi}_{q,s,z} \mathbf{\tilde{x}}_{q,z}
@@ -508,7 +519,8 @@
     Here, $\lambda$ is the regularization strength ($\lambda \geq 0$).
     $\mathbf{T}$ represents a linear operator that firstly slides a local patch window
     through all DW images and then
-    flattens every set of local patches to two-dimensional (2D) matrices.
+    flattens every set of local \hl{patches} \marginnote{R1.36}
+    to two-dimensional (2D) matrices.
     The nuclear norm regularization is enforced via
         singular value thresholding of all flattened 2D matrices \citep{cai_2010_svt}.
     We implemented this regularization term as \hl{a proximal operator}
@@ -522,7 +534,8 @@
     Our efficient implementation is to scale $\mathbf{T}^H$
     as $(1 / \mathrm{divisor})\mathbf{T}^H$,
     where the divisor matrix is obtained by $\mathbf{T}^H \mathbf{T}~\mathbf{1}$.
-    $\mathbf{1}$ denotes the matrix of ones with the same shape as \hl{the input}. \marginnote{R3.31}
+    $\mathbf{1}$ denotes the matrix of \hl{all ones} \marginnote{R3.11}
+    with the same shape as \hl{the input}. \marginnote{R3.31}
 
     % ============================== %
     \subsection{Reconstruction}
@@ -534,7 +547,8 @@
     using ESPIRiT \citep{uecker_2014_espirit} in SigPy \citep{ong_2019_sigpy}.
 
     With this pre-processing as well as
-    the implemented forward models and proximal operator,
+    \marginnote{R1.39}
+    the implemented forward models and \hl{proximal operator},
     both inverse problems in \cref{EQU:solve_shot,EQU:solve_dwi} were solved by
     the alternating direction method of multipliers (ADMM) \citep{boyd_2010_admm}.
 
@@ -593,7 +607,7 @@
     were computed in MITK-Diffusion \citep{fritzsche_2012_mitk_diff}
     with the spherical harmonic order \num{4} and the regularization factor \num{0.002}.
     fODF maps were displayed with the min-max normalization
-    \marginnote{R3.41}
+    \marginnote{R1.41, R3.41}
     and the FA/GFA \hl{(generalized fractional anisotropy)}
     scaling factor \num{2.2}.
 
@@ -722,7 +736,8 @@
         and high $b$-values (up to \SI{3000}{s/mm^2}).
         As a result, their corresponding fODF maps illustrate chaotic fiber orientation.
         With the local PCA denoiser applied to DW images reconstructed by MUSE,
-        the fODF peaks show improved smoothness, but the FA values are reduced
+        the fODF peaks show improved \hl{smoothness}, \marginnote{R1.44}
+        but the FA values are reduced
         due to excessive noise in DW images.
         In contrast, with LLR regularization applied to
         the \hl{spatial-diffusion} patches, \marginnote{R1.45}
