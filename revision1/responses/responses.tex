@@ -63,8 +63,8 @@
     \item \textit{No quantitative validation is provided. Authors should include quantitative comparisons of alternative methods using ground truth (GT) reconstructions (GT) built either from simulations or from retrospective subsampling of a long-enough DWI scan (or ideally from both).}
 
     \hspace{1em} Thank you for the suggestion.
-    We acquired another dataset using 6-shot interleaved EPI
-    and then retrospectively undersampled the data to only two shots.
+    We acquired another dataset using 4-shot interleaved EPI
+    and then retrospectively undersampled the data to only one shot.
     We compared the reconstructed DW images
     both qualitatively and quantitatively.
     Please refer to R1.1 in the annotated manuscript.
@@ -73,10 +73,10 @@
 
     \hspace{1em} Thank you for the suggestion.
     We compared with MUSE, MUSSELS, and JULEP.
-    We did not compare with DAGER
-    because we did not have access to the source code.
+    We didn't compare with DAGER
+    because DAGER was proposed for single-shot EPI acquisition.
     We did not compare with SPA-LLR because
-    the SPA-LLR paper addresses the reconstruction problem
+    the SPA-LLR paper addressed the reconstruction problem
     of single-band acquisition.
     We thank all researchers who share their codes
     in the section Acknowledgments.
@@ -90,10 +90,17 @@
     Second, Dr.~Bilgic's implementation allows for the reconstruction of
     multi-band multi-shot EPI data
     utilizing the readout extended FOV concept.
+    However, in this revision, we compared with JULEP instead.
 
-    \hspace{1em} For local PCA, we were computing with Manjón 2013.
+    \hspace{1em} Considering the major comment from Reviewer \#3 (R3.6),
+    we decided to compare with Cordero-Grande, et al.~Neuroimage (2019)
+    \href{https://doi.org/10.1016/j.neuroimage.2019.06.039}{10.1016/j.neuroimage.2019.06.039}.
 
     \item \textit{A sensitivity analysis based on the GT should be included considering these factors: LLR regularization weight, LLR block size, LLR overlap factor, PE interleave configuration (i.e., why 2 shots/b?). In case some of these factors are/need to be left aside, authors should precisely justify why. Ablation experiments comparing full proposal versus removing interleaved PE / removing LLR would also be very interesting.}
+
+    \hspace{1em} Thank you for the suggestion.
+    We have conducted the sensitivity analysis and ablation experiments.
+
     \item \textit{LLR regularization performance and reliability may degrade in the presence of motion. Also, often DWI is performed with alternating PEs for distortion correction. SNR is heterogeneous over the FOV, which may not be appropriately covered by a single regularization weight. Please, add these aspects to discussion. See also minor point 5.}
 
     \hspace{1em} Thank you for the suggestion.
@@ -106,14 +113,18 @@
 
     \item \textit{Fig. 2 / Fig. 3 \textrightarrow you mention slice / diffusion direction included, but this is not very relevant, what matters is to specify the reasons for including these and not others. Also, it would be important to include snapshots at different slice locations within the brain, particularly at inferior locations, where reconstruction may become more challenging. Analogously, please provide rationale for snapshots selected in Fig. 4 and Fig. 5.}
 
+    \hspace{1em} Thank you for the suggestion.
+    We included slices from inferior locations.
+
     \item \textit{\url{https://github.com/ZhengguoTan/sigpy} seems a link to a generic tool. \url{https://doi.org/10.5281/zenodo.7548595} is not available yet. Please, remember to provide paper-specific links before acceptance or otherwise remove these links from the manuscript.}
 
     \hspace{1em} We forked sigpy (\url{https://github.com/mikgroup/sigpy}) for the development of
     our proposed reconstruction. We promise to publish our source codes in the forked sigpy.
 
     \hspace{1em} As shown in \cref{FIG:Zenodo},
-    \url{https://doi.org/10.5281/zenodo.7548595} is a link we have already reserved
-    to upload all raw data in this work upon the publication of our manuscript.
+    \url{https://doi.org/10.5281/zenodo.7548595} is a link we reserved
+    for the upload of all raw data in this work
+    upon the publication of our manuscript.
     Therefore, we would like to keep this link in the manuscript.
 
     \begin{figure}[ht]
@@ -136,12 +147,12 @@
 
     \item \textit{L55: "DAGER requires many diffusion directions" \textrightarrow JETS also seems to require many diffusion directions, so guess this should be formulated differently?}
 
-    We reformulated this paragraph.
+    \hspace{1em} We reformulated this paragraph.
 
     \item \textit{Section 2.2.1 and 2.2.2 \textrightarrow please, explicitly specify slice thickness.}
 
-    \hspace{1em} Both protocols employ isotropic resolution.
-    The slice thickness in Section 2.2.1 and 2.2.2 is \SI{1.2}{mm} and \SI{1.0}{mm}, respectively.
+    \hspace{1em} Both protocols employed isotropic resolution.
+    We listed slice thickness in the table.
 
     \item \textit{L105: "acceleration" \textrightarrow would use "undersampling" as this is EPI and there's no 1-1 correspondence between undersampling and acceleration (several occurrences).}
 
@@ -153,11 +164,41 @@
     We have rephrased the sentence and added the topic of phase estimation to the discussion.
 
     \item \textit{L172: "firstly slides [...] matrices" \textrightarrow not very clear, think you should reword and explicitly mention what dimensions are concatenated in rows and columns of matrices. Also, reasons for not using 3D patches should be discussed.}
+
+    \hspace{1em} Thank you for the suggestion.
+    3D patches were not used because this is a SMS reconstruction.
+    In SMS, spatially separated slices
+    are simultaneously excited and acquired.
+    This spatial separation of slices prohibits the use of 3D patches.
+
     \item \textit{L176: "$T^HT$ input neq input" \textrightarrow unclear, maybe a typo?}
+
+    \hspace{1em} Thank you for the question.
+    Please refer to R2.1 as well as the notebook for detailed explanation:
+    \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+
     \item \textit{L181: "efficient implementation" \textrightarrow claim on efficiency does not seem supported from description... inverse density weighting is well-known for reconstructing original data levels back when slide-windowing. You should provide more details on efficiency or articulate description differently. Importantly, overlap ratio does not seem to be reported, but this may have a dramatic effect in computational cost.}
+
+    \hspace{1em} Thank you for the comments.
+    The scaling matrix (inverse density weighting) is needed
+    in the case of overlapping patches (i.e. when stride $<$ block),
+    in order to remove accumulated values during SVT.
+    The overlap ratio was also reported (i.e.~stride~$=1$).
+
     \item \textit{Supporting Figure S3. "Small block size (i.e., 2) suffers from image blurring, whereas increasing block size gradually leads to increased noise" \textrightarrow may appear counter-intuitive as small block sizes should aid with localization and therefore prevent blurring, at the price of less information for denoising? Can you clarify on reasons / potential hidden factors for this behaviour?}
+
+    \hspace{1em} Thank you. We removed the supporting figures,
+    and included the sensitivity analysis as a main figure
+    in the manuscript.
+
     \item \textit{L239: "blurring" \textrightarrow leading artifact resembles Rician bias rather than blurring in my opinion, could you clarify?}
+
+    \hspace{1em} You could be right the DWI at high $b$-values resembles Rician bias.
+
     \item \textit{Seems Fig. 4 could be replaced by encompassing Supp. Fig. 6?}
+
+    \hspace{1em} Thank you. The results were replaced.
+
 \end{enumerate}
 
 
@@ -185,6 +226,8 @@
     \hspace{1em} Done.
 
     \item \textit{L123: "slice collapsed k-space data" \textrightarrow not sure this expression is clear, you may consider rewording.}
+
+    \hspace{1em} Thank you. Reworded.
 
     \item \textit{L125: "Such acquisition can be modeled in two ways." \textrightarrow "Acquisition modeling needs to consider several aspects.".}
 
@@ -252,6 +295,8 @@
 
     \item \textit{L252: "within the rectangular regions in Fig. 4" \textrightarrow these may be difficult to appreciate, consider enhancing a bit perhaps?}
 
+    \hspace{1em} Thank you. We switched to the yellow box
+    when it came to magnified views.
 
     \item \textit{L259: "smooth patterns" \textrightarrow "smoothness".}
 
@@ -281,22 +326,46 @@
 
 \begin{enumerate}
     \item \textit{It is not clear how the operator $T$ in Eq.~6 treats the multiple patches of the image. A graphical illustration of how the patches are combined to a 2D matrix whose nuclear norm is then taken would be helpful.}
+
+    Thank you for the suggestion. We made a Google Colab to illustrate the operator $T$: \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+
     \item \textit{When the EPI segments are initially reconstructed to obtain the phase errors (Eq.~5), the related images surely represent single diffusion weighting. What is the T operator doing then in this equation? There is no diffusion dimension yet to impose a low rank approximation.}
 
-    \hspace{1em} Very good question.
+    \hspace{1em} Very good question. We reformated the method description.
 
     \item \textit{How was the patch size and the overlap selected (on what basis)?}
+
+    \hspace{1em} Thank you for the question.
+    Please refer to R1.4 and the sensitivity analysis figure
+    in the manuscript.
+
     \item \textit{The proposed strategy involves a shift of the sampling pattern between diffusion weightings. The advantage of this shift is intuitively understandable, and it is reported as a result (lines 279-280) but not shown directly (comparisons with MUSE and MUSSELS involve more differences than the shift alone). It would be great to see the proposed joint reconstruction without the shift for comparison.}
+
+    \hspace{1em} Thank you. We compared the reconstruction
+    without and with the $k_y$ shift in the manuscript.
+
     \item \textit{Is there any importance in the way the sampling shift is distributed among diffusion weightings?}
 
     \hspace{1em} In this work, multi-band and in-plane undersampled
     two-shot interleaved EPI was proposed.
     With in-plane undersampling,
     it is indeed important to have $k_y$ shifting.
-    Please refer to \hl{Figure 3} in the manuscript.
+    Please refer to the above-mentioned comparison in the manuscript.
 
     \item \textit{The proposed method seems very similar to MUSE with the PCA denoiser (the difference is that in JETS the LLR is promoted during the image fit, while in MUSE it is imposed afterwards) but delivers surprisingly better results. In the comparison of both strategies (Fig. 2) MUSE+PCA seems to reduce the noise stronger while some details are lost. If the PCA filter were made less aggressive, would MUSE still look worse than JETS?}
+
+    \hspace{1em} We compared with the complex-valued DWI denoising method
+    (Cordero-Grande, et al.~Neuroimage (2019)
+    \href{https://doi.org/10.1016/j.neuroimage.2019.06.039}{10.1016/j.neuroimage.2019.06.039}), in which the aggressiveness (strength)
+    of the PCA filter is automatically determined.
+    It is beyond the scope of this work to optimize
+    the published denoising method.
+
     \item \textit{In the same figure, MUSSELS shows similar details to JETS, but with more noise. Here, conversely, could not MUSSELS be improved by adding a moderate degree of PCA filtering?}
+
+    \hspace{1em} In this revision, we switched to JULEP for comparison,
+    because in principle JULEP is an improved version of MUSSELS.
+
     \item \textit{The symbol $\mathcal{T}_{\lambda / \rho}$ is not defined in Eq.7.}
 
     \hspace{1em} Thank you. Defined.
@@ -326,9 +395,38 @@
     \item \textit{Was there any correction for different eddy currents and motion between volumes? If not, why not? Eddy currents and (out-of-plane) motion could break the assumption that the low-rank patches reflect the same underlying anatomy. Perhaps the joint reconstruction method developed by the Authors actually mitigates these effects (and that would represent an additional advantage of the method), but correction would definitely need to be done in the case of the other reconstruction methods in order to make a fair comparison.\\
     As an aside, the Authors do refer to "motion robustness" several times, but this can surely only be robustness to in-plane motion. Out-of-plane motion in 2D imaging is harder as it is accompanied by a true loss of information. Model-based methods like that implemented in eddy (Andersson, et al. Neuroimage (2017) \url{https://doi.org/10.1016/j.neuroimage.2017.02.085}) can partially compensate for it, but don't seem to have been used here; and techniques like gSlider can correct for motion within the thick acquired slab during reconstruction (Wang, et al. Magn. Reson. Med. (2018) \url{https://doi.org/10.1002/mrm.27196}), but require specialised acquisitions.\\
     I would suggest that the Authors properly discuss the issues of eddy currents and intra- and inter-volume motion, and perhaps consider how they could properly incorporate a consideration of these effects into their framework.}
+
+    \hspace{1em} Thank you. We included all these issues into the discussion.
+
     \item \textit{Similarly to 2.: was there any correction for susceptibility distortions? I understand that the segmented EPI will have less distortions than conventional single shot EPI, but they still need to be corrected for to get anatomically correct images. Was the GRE scan perhaps used to make a B0 map which was included in the reconstruction?}
+
+    \hspace{1em} This work focused on the development of
+    the NAViEPI sequence and
+    the joint reconstruction method.
+    No susceptibility distortion correction was done in this work,
+    but we put this issue into the discussion.
+
+
     \item \textit{It did not become clear to me why this study is being done at 7T. The increased sensitivity to B0 distortions and SNR loss with long TEs which this study proposes to overcome are 7T problems that are much less pronounced at 3T. In part it is for this reason that most DWI studies are still performed at 3T. What benefit are the Authors aiming to get from running DWI studies at 7T?}
+
+    \hspace{1em} Thank you for the comment.
+    We agree with you about the challenges of DWI at 7~T.
+    However, we believe that there is an SNR advantage at 7~T.
+    According to Figure 20 in U\u{g}urbil et al.~(\href{https://doi.org/10.1016/j.neuroimage.2013.05.012}{10.1016/j.neuroimage.2013.05.012}),
+    the SNR benefit that 7~T generally possesses over 3~T
+    should outweigh the shorter $T_2$ times at 7~T,
+    even if the bandwidth is adjusted to compensate
+    for the larger field inhomogeneities.
+
+
     \item \textit{Relatedly, the acquisition scheme doesn't seem that fast. A similar scheme at 3T could even be shorter as T2 signal loss is less pronounced and so each (multiband) slice could be acquired in a single shot.}
+
+    \hspace{1em} Thank you for the comment.
+    We compare our proposed sequence NAViEPI with single-shot EPI
+    for the acquisition of sub-millimeter
+    ($0.5 \times 0.5 \times 2$~\si{mm^3}) diffusion-weighted images.
+    Please refer to Figure \hl{xx} in the manuscript.
+
     \item \textit{The denoising approach used as comparison does not reflect the state of the art. It is generally recommended to perform denoising on complex data (see Cordero-Grande, et al. Neuroimage (2019) \url{https://doi.org/10.1016/j.neuroimage.2019.06.039}), as this will avoid the noise floor issues that are apparent in the MUSE + Denoiser panel in Fig. 3. This should be completely possible for the Authors, as they reconstruct the data themselves. I would say the only reason not to do complex denoising at this point is if you are stuck with only scanner reconstructed magnitude data. Complex denoising is available in openly available toolboxes, e.g. MRtrix3 (\url{https://mrtrix.readthedocs.io/en/latest/reference/commands/dwidenoise.html}).}
 
     \hspace{1em} Thank you for the literature and the MRtrix tool.
@@ -336,21 +434,22 @@
     including MUSE.
     We installed the MRtrix tool, and were able to use
     the denoising approach on complex MUSE images.
+    Please refer to Figure \hl{xx} in the manuscript.
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=\textwidth]{comp_dwi_denoiser.png}
-        \caption{Comparison of one DW image
-        (57th slice and 9th direction of
-        the 1.2 mm isotropic resolution acquisition) from
-        (1st column) MUSE,
-        (2nd column) MUSE with the local-PCA denoiser in dipy,
-        (3rd column) MUSE with the local-PCA denoiser on complex images in MRtrix, and
-        (4th column) our proposed JETS reconstruction.}
-        \label{FIG:Denoiser}
-    \end{figure}
-
-    As shown in \cref{FIG:Denoiser},
+%    \begin{figure}[ht]
+%        \centering
+%        \includegraphics[width=\textwidth]{comp_dwi_denoiser.png}
+%        \caption{Comparison of one DW image
+%        (57th slice and 9th direction of
+%        the 1.2 mm isotropic resolution acquisition) from
+%        (1st column) MUSE,
+%        (2nd column) MUSE with the local-PCA denoiser in dipy,
+%        (3rd column) MUSE with the local-PCA denoiser on complex images in MRtrix, and
+%        (4th column) our proposed JETS reconstruction.}
+%        \label{FIG:Denoiser}
+%    \end{figure}
+%
+%    As shown in \cref{FIG:Denoiser},
 
     \item \textit{While we are on the topic of "state of the art": All the papers in the Introduction demonstrating "conventional" SS-EPI are from over 20 years ago. There have been important technological developments, e.g. Connectom scanners, gradient inserts, sequence developments, e.g. multiband, gSlider, and image correction technique developments, e.g. the continued development of "topup" and "eddy", since then.}
 
@@ -373,10 +472,24 @@
     respectively.
 
     \item \textit{The "efficient implementation" to correct checkerboard artefacts (lines 177--183) seems very underspecified. Perhaps it would be better developed in an appendix and just mentioned in the main text? Specific points:}
+
+    \hspace{1em} Please refer to the Jupyter Notebook on the explanation of the implementation:
+    \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+
         \begin{itemize}
             \item [-] \textit{is $(1/divisor)$ a matrix inverse of $(T'*T*1)$? Or is it rather a scalar derived by solving the linear equation $(T'*T*1) =$ (something)?}
+
+            \hspace{0.5em} "divisor" is a matrix, but not the inverse of $T^H T \mathbf{1}$.
+
             \item [-] \textit{is 1 the matrix of all ones, or the identity matrix?}
+
+            \hspace{0.5em} $\mathbf{1}$ is the matrix of all ones.
+
             \item [-] \textit{why would including this divisor prevent (or mitigate) checkerboard artefacts at all?}
+
+            \hspace{0.5em} The use of overlapping blocks prevents checkerboard artefacts, and overlapping blocks require the removal repeated values.
+            Here we avoid this repeating by using the divisor.
+
         \end{itemize}
 \end{enumerate}
 
@@ -456,7 +569,7 @@
 
     \item \textit{line 107, 119: why is minutes$'$seconds$''$ notation used here but "min" elsewhere? Recommend standardising, especially since the used of minutes$'$seconds$''$ is fairly old-fashioned...}
 
-    Thank you. Corrected.
+    \hspace{1em} Thank you. Corrected.
 
     \item \textit{were the different b-values in the second acquisition scheme interleaved, or collected one after each other?}
 

@@ -45,6 +45,8 @@
 \newcommand*{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\argmin}{\arg\!\min}
 
+\usepackage{booktabs}
+
 \usepackage[bottom,hang,flushmargin]{footmisc}
 
 \usepackage[colorlinks]{hyperref}
@@ -64,14 +66,21 @@
 
 \usepackage{marginnote}
 
+\usepackage{threeparttable}
+\usepackage{colortbl}
+\usepackage{multirow}
 
-\journal{NeuroImage}
+
+\journal{Imaging Neuroscience}
 
 \begin{document}
 
     \begin{frontmatter}
 
-        \title{Accelerated Diffusion Weighted Magnetic Resonance Imaging at 7~T: Joint Reconstruction for Multi-Shell Multi-Band Shift-Encoded Echo Planar Imaging (JETS-EPI)
+        % \title{Accelerated Diffusion Weighted Magnetic Resonance Imaging at 7~T: Joint Reconstruction for Multi-Shell Multi-Band Shift-Encoded Echo Planar Imaging (JETS-EPI)
+        % }
+
+        \title{Accelerated Diffusion Weighted Magnetic Resonance Imaging at 7~T: Joint Reconstruction for Shift-Encoded Navigator-based Interleaved Echo Planar Imaging (JETS-NAViEPI)
         }
 
         \author[1]{Zhengguo Tan}
@@ -81,8 +90,8 @@
         \author[1]{Florian Knoll}
 
         \affiliation[1]{
-            organization=Department Artificial Intelligence in Biomedical Engineering (AIBE),
-                Friedrich-Alexander-Universität Erlangen-Nürnberg,
+            organization={Department Artificial Intelligence in Biomedical Engineering (AIBE),
+            Friedrich-Alexander University of Erlangen-Nuremberg},
             city=Erlangen,
             country=Germany}
 
@@ -92,8 +101,8 @@
             country=Germany}
 
         \affiliation[3]{
-            organization=Institute of Radiology, University Hospital Erlangen,
-                    Friedrich-Alexander-Universität Erlangen-Nürnberg,
+            organization={Institute of Radiology, University Hospital Erlangen,
+            Friedrich-Alexander University of Erlangen-Nuremberg},
             city=Erlangen,
             country=Germany}
 
@@ -106,28 +115,34 @@
             Such pursuit, however, faces several technical challenges.
             First, increased off-resonance and shorter $T_2$ relaxation
             require faster echo train readouts.
-            Second, high angular resolution in $q$-space requires
-            the use of high and/or multiple $b$-values.
-            \hl{High \mbox{$b$}-values supply strongly diffusion-weighted images,
-            which have lower signal-to-noise ratio (SNR).} \marginnote{R3.13}
-            Multi-shot interleaved echo-planar imaging (EPI) and
-            advanced reconstruction strategies
-            have been proven suitable for high-resolution DW-MRI.
-            These methods, however, utilize fully-sampled EPI and thus
-            require longer scan time compared to single-shot EPI.
-            To address these challenges, \marginnote{R1.6}
-            \hl{we developed the \mbox{$k_y$} shift encoding scheme
+            Second, existing high-resolution DW-MRI techniques
+            usually employ in-plane fully-sampled multi-shot EPI,
+            which not only prolongs the scan time
+            but also induces a high specific absorption rate (SAR)
+            at \SI{7}{\tesla}.
+            To address these challenges,
+            we develop in this work
+            navigator-based interleaved EPI (NAViEPI)
+            which enforces consistent bandwidth
+            between the imaging and the navigator echo.
+            First, NAViEPI renders no distortion mismatch
+            between the two echoes,
+            and thus simplifies shot-to-shot phase variation correction.
+            Second, NAViEPI allows for a large number of shots (e.g.~$>4$)
+            with undersampled iEPI acquisition,
+            thereby rendering clinically-feasible high-resolution
+            sub-milliemeter protocols.
+            To retain signal-to-noise ratio (SNR)
+            and to reduce undersampling artifacts,
+            \marginnote{R1.6}
+            \hl{we develop the \mbox{$k_y$}-shift encoding
             among diffusion encodings
             to explore complementary \mbox{$k$}-\mbox{$q$}-space sampling.
-            Moreover, we developed a novel joint reconstruction
-            with locally low rank regularization}
-            for multi-shell multi-band shift-encoding acquisition at \SI{7}{\tesla} (JETS-EPI).
-            Our sampling method allows for faster acquisition
-            with the use of high in-plane undersampling
-            and only two shots per diffusion direction.
-            The proposed joint reconstruction exhibits better denoising of DW images
-            and clearer delineation of fiber distributions.
-            \vspace{3em}
+            Moreover, we develop a novel joint reconstruction
+            with overlapping locally low-rank regularization}
+            generalized to multi-band multi-shot acquisition
+            at \SI{7}{\tesla} (dubbed JETS-NAViEPI).
+            \vspace{2em}
         \end{abstract}
 
         %%Graphical abstract
@@ -137,6 +152,9 @@
 
         %%Research highlights
         \begin{highlights}
+            \item Navigator-based interleaved EPI acquisition with
+            minimal distortion mismatch between echoes
+
             \item Novel accelerated diffusion acquisition
             with shifted phase encoding among diffusion directions
             for complementary $k$-$q$-space sampling at \SI{7}{\tesla}
@@ -145,23 +163,20 @@
             diffusion-weighted image reconstruction
             with overlapping locally low-rank regularization
 
-            \item \SI{5}{min} \SI{1.2}{mm} isotropic resolution
-            with $b$-value \SI{1000}{s/mm^2} and 32 diffusion directions
-            for in vivo whole-brain diffusion tensor imaging
+            \item Efficient simultaneous multi-slice (SMS)
+            image reconstruction
 
-            \item \SI{23}{min} \SI{1}{mm} isotropic resolution
-            with three-shell high $b$-values (up to \SI{3000}{s/mm^2})
-            and 126 diffusion directions
-            for in vivo whole-brain diffusion tensor imaging
-            and fiber orientation distribution function (fODF) mapping
-            % FL: eventually adapt to what is shown in the paper
+            \item 3-scan trace acquisition with the voxel size
+            $0.5\times0.5\times2.0$~mm$^3$ and 60 slices
+            at \SI{1.5}{\minute}
         \end{highlights}
 
         \begin{keyword}
             %% keywords here, in the form: keyword \sep keyword
             Diffusion-weighted magnetic resonance imaging \sep
             Echo planar imaging \sep
-            Ultra high field \sep
+            Navigator \sep
+            Ultra-high field \sep
             Joint reconstruction \sep
             Low rank \sep
             Simultaneous multi slice
@@ -178,7 +193,7 @@
 
     Diffusion-weighted magnetic resonance imaging (DW-MRI)
     \citep{lebihan_1986_diff,merboldt_1985_diff} is a non-invasive modality
-    that is sensitive to intravoxel Brownian motion of water molecules.
+    that is sensitive to the intravoxel Brownian motion of water molecules.
     DW-MRI forms the basis for diffusion tensor imaging (DTI) \citep{basser_1994_dmri,mori_2001_track}
     and high angular resolution diffusion imaging (HARDI) \citep{tuch_2002_hardi},
     and has been widely used in acute brain ischemia diagnosis, in tumor detection and staging,
@@ -208,71 +223,93 @@
     was proposed to achieve high-resolution DW-MRI.}
     Advanced pulse sequences based on
     \hl{multi-shot EPI} have also been developed, \marginnote{R3.15}
-    including but not limited to interleaved EPI \citep{butts_1993_iepi},
+    including but not limited to interleaved EPI (iEPI)
+    \citep{butts_1993_iepi},
     PROPELLER \citep{pipe_2002_blade}, and
-    readout-segmented EPI \citep{porter_2009_resolve,heidemann_2010_resolve7t}.
-    Based on 4-shot interleaved EPI, advanced image reconstruction techniques,
-    e.g.~multiplexed sensitivity encoding (MUSE)
-    achieved DW-MRI with sub-millimeter in-plane resolution
-    and maximal $b$-value \SI{2000}{s/mm^2} at \SI{3}{\tesla} \citep{chen_2013_muse}.
-    In MUSE, four shots (i.e., four-fold undersampling per shot)
-    are \hl{used} because of two reasons. \marginnote{R1.20}
-    First, the high spatial resolution requires the use of multi-shot acquisition,
-    which employs a shorter echo train length per shot.
-    This allows for reduced echo time and less spatial distortion.
-    Second, MUSE employs parallel imaging to reconstruct
-    \hl{single shot images} \marginnote{R3.16}
-    for the extraction of shot-to-shot phase variation,
-    and four-fold undersampling per shot is achievable in parallel imaging.
+    readout-segmented EPI (rsEPI)
+    \citep{porter_2009_resolve,heidemann_2010_resolve7t}.
 
-    \marginnote{R3.8}
-    \hl{Multi-shot EPI, however, prolongs the acquisition time as well as
-    introduces motion sensitivity, i.e., shot-to-shot phase variation.}
-    Recently, compressed sensing \citep{lustig_2007_cs,block_2007_cs}
-    has been explored to accelerate multi-shot EPI acquisition.
+    Based on four-shot iEPI,
+    multiplexed sensitivity encoding (MUSE) image reconstruction
+    achieved DW-MRI with a sub-millimeter in-plane resolution
+    and maximal $b$-value \SI{800}{s/mm^2} at \SI{3}{\tesla}
+    \citep{chen_2013_muse}.
+    The four-shot iEPI employed in MUSE acquired
+    an in-plane fully-sampled $k$-space, except partial Fourier.
+    Every shot (segment), corresponding to four-fold undersampling,
+    was then reconstructed via parallel imaging
+    to obtain shot-to-shot phase variation.
+    This indicates that increasing the number of shots in MUSE
+    will result in higher undersampling per shot,
+    and consequently, degrade shot phase estimation \citep{wu_2017_diff}.
+    On the other hand, the use of in-plane fully-sampled four-shot iEPI
+    is challenging at ultra-high field (e.g.~\SI{7}{\tesla}),
+    because the SAR is linearly proportional
+    to the square of the field strength.
+
+    Alternatively, navigator-based iEPI acquisition has been proposed
+    \citep{jeong_2013_navims,dai_2017_navi,dai_2018_navi}.
+    These proposals may allow for a larger number of shots,
+    and hence higher spatial resolution.
+    However, due to the use of different bandwidth
+    between the imaging echo and the navigator echo,
+    these proposals suffered from geometric distortion mismatch
+    between the two echoes and thus required specific compensation methods.
+    In contrast, rsEPI \citep{porter_2009_resolve,heidemann_2010_resolve7t}
+    used the same readout segment for both echoes,
+    and thus required no correction of the navigator echo.
+
+    Beyond the MUSE-type parallel imaging reconstruction,
+    compressed sensing \citep{lustig_2007_cs,block_2007_cs}
+    has been explored.
     For instance, multi-shot reconstruction techniques
     based on structured low-rank matrix completion (MUSSELS)
     \citep{mani_2017_mussels,bilgic_2019_neatr} achieved
     5-shot DW-MRI with 9-fold undersampling per shot.
-    Both MUSSELS and MUSE target the reconstruction of one DW image
-    from interleaved EPI using at least 4 shots,
-    i.e., joint-$k$-$q$-space undersampling is not explored.
+    Recently, JULEP \citep{dai_2023_julep}
+    incorporated explicit phase mapping into MUSSELS.
+    These reconstruction techniques, i.e., MUSE, MUSSELS and JULEP,
+    targeted the reconstruction of one DW image
+    from interleaved EPI acquisition,
+    and did not explore joint-$k$-$q$-space undersampling or reconstruction.
 
-    Joint-$k$-$q$-space undersampling can be achieved via proper regularization
-    along the diffusion encoding direction.
-    Relevant examples are
-    diffusion undersampling with Gaussian process estimated reconstruction (DAGER)
-    \citep{wu_2019_dager} and magnitude-based spatial-angular locally low-rank regularization
+    Joint-$k$-$q$-space undersampling can be achieved
+    via proper regularization along the diffusion encoding direction.
+    Relevant examples are diffusion undersampling
+    with Gaussian process estimated reconstruction (DAGER)
+    \citep{wu_2019_dager} and
+    magnitude-based spatial-angular locally low-rank regularization
     (SPA-LLR) \citep{hu_2020_spa_llr}.
     \marginnote{R1.2, R1.10}
-    \hl{However, DAGER addresses the reconstruction problem
+    \hl{However, DAGER addressed the reconstruction problem
     of single-shot EPI acquisition.
-    SPA-LLR focuses on the reconstruction
-    of single-band and in-plane fully-sampled acquisition.}
+    SPA-LLR focused on the reconstruction
+    of single-band and fully-sampled iEPI acquisition.}
 
     In this work, we propose a Joint $k$-$q$-slice rEconsTruction framework
-    for multi-band multi-shell Shift-encoded EPI at \SI{7}{\tesla}
-    (dubbed as JETS-EPI).
-    First, our acquisition method differs from most existing techniques
-    as it shifts the $k$-space in-plane sampling pattern
+    for Shift-encoded NAVigator-based interleaved EPI
+    at \SI{7}{\tesla} (dubbed JETS-NAViEPI).
+    Our pulse sequence, NAViEPI, differs from most existing techniques.
+    First, NAViEPI builds upon interleaved EPI, thereby allowing for
+    fast and efficient $k$-space coverage.
+    Second, inspired by rsEPI, NAViEPI ensures the same bandwidth
+    between the imaging and the navigator echo,
+    thereby minimizing geometric distortion and
+    allowing for the use of a larger number of shots.
+    NAViEPI essentially integrates the advantages of both iEPI and rsEPI.
+    Third, NAViEPI utilizes undersampled multi-shot iEPI,
+    thereby alleviating the SAR problem at \SI{7}{\tesla}.
+    Fourth, NAViEPI shifts the $k$-space in-plane sampling pattern
     along the phase encoding ($k_y$) direction.
-    This shifting creates complementary $k$-$q$-space sampling.
-    Second, our reconstruction framework generalizes to
-    jointly reconstruct multi-slice multi-shell multi-direction DW images.
-    This is built upon comprehensive modeling of the acquisition process
-    and construction of regularization terms (e.g.~LLR) as proximal operators.
-    We compared our proposed method with
-    state-of-the-art multi-shot reconstruction techniques,
-    specifically MUSE and MUSSELS,
-    as well as
-    \marginnote{R3.20}
-    \hl{an established local PCA-based DW image denoising algorithm},
-    \citep{manjon_2013_localpca,veraart_2016_denoise}.
-    % and Patch2Self \citep{fadnavis_2020_patch2self}.
-    Our proposed method achieves \SI{7}{\tesla}
-    three-shell high $b$-value (up to \SI{3000}{s/mm^2})
-    and 126 diffusion direction measurements
-    at \SI{1}{mm} isotropic resolution in less than \SI{23}{min}.
+    This shifting creates complementary $k$-$q$-space sampling,
+    which leads to the possibility of
+    our joint $k$-$q$-slice reconstruction.
+    Specifically, we employ spatial-diffusion overlapping LLR regularization
+    to jointly reconstruct all diffusion encodings and multi-band slices.
+    In vivo experiments at \SI{7}{\tesla} and
+    comparisons with other techniques
+    demonstrate the efficiency of our proposed method in
+    achieving high spatiotemporal resolution DW-MRI at ultra-high field.
 
     \clearpage
 
@@ -281,27 +318,53 @@
     \label{SEC:Meth}
 
     % ============================== %
-    \subsection{Multi-band multi-shell shift-encoded EPI acquisition}
+    \subsection{Multi-band shift-encoded iEPI acquisition}
 
-    \cref{FIG:sampling} (A) displays diffusion weighted image acquisition
-    based on two-shot interleaved EPI.
-    Conventionally, such a sampling pattern is repeated for all diffusion directions.
+    \cref{FIG:sampling} (A) displays diffusion-weighted image acquisition
+    based on three-shot interleaved EPI
+    with three-fold in-plane undersampling.
+    Conventionally, such a sampling pattern is repeated
+    for all diffusion directions.
     In contrast, we propose the $k_y$-shifted diffusion encoding,
     as shown in \cref{FIG:sampling} (B).
     The interleaved EPI sampling pattern is shifted by one $k_y$ line
     per diffusion direction,
     with the cycling period being the in-plane undersampling factor.
-    \cref{FIG:sampling} (C) displays the employed multi-shell sampling pattern.
-    Every diffusion direction is distinct from others,
-    thereby constructing a non-colinear sampling pattern.
-    This $k_y$-shifted non-colinear diffusion encoding exploits
-    complementary $k$-$q$-space sampling.
-    Its \hl{properties} are two-fold. \marginnote{R1.21}
-    First, the $k_y$-shifting is linear and retains consistent echo spacing.
-    Second, DW images share anatomical structures but differ in image contrast
-    depending on $b$-values and diffusion directions,
-    thus complementary $q$-space sampling is well suited
-    for the exploration of structural similarity.
+
+    It is worth noting that, as shown in \cref{FIG:sampling} (A),
+    the undersampling factor of one segment is
+    $R_\text{in-plane} \times N_\mathrm{shot}$,
+    yielding nine-fold in-plane undersampling in this example.
+    In other words, the undersampling factor per segment
+    linearly scales up with the number of shots.
+    Consequently, conventional self-gating reconstruction techniques,
+    e.g.~MUSE, suffer from degraded shot-to-shot phase estimation,
+    which in turn limits the number of shots and spatial resolution.
+
+    \subsection{NAViEPI: Navigator-based iEPI with consistent bandwidth
+    between the imaging and the navigator echo - where iEPI meets rsEPI}
+
+    Instead of conventional MUSE with in-plane fully-sampled iEPI and
+    a limited number of shots,
+    We propose NAVigator-based interleaved EPI (NAViEPI)
+    in this work.
+    Moreover, inspired by rsEPI \citep{porter_2009_resolve},
+    NAViEPI enforces a consistent bandwidth
+    between the imaging and the navigator echo,
+    thereby minimizing distortion mismatch between the two echoes.
+
+    % \cref{FIG:sampling} (C) displays the employed multi-shell sampling pattern.
+    % Every diffusion direction is distinct from others,
+    % thereby constructing a non-colinear sampling pattern.
+    % This $k_y$-shifted non-colinear diffusion encoding exploits
+    % complementary $k$-$q$-space sampling.
+    % Its \hl{properties} are two-fold. \marginnote{R1.21}
+    % First, the $k_y$-shifting is linear and retains consistent echo spacing.
+    % Second, DW images share anatomical structures but differ in image contrast
+    % depending on $b$-values and diffusion directions,
+    % thus complementary $q$-space sampling is well suited
+    % for the exploration of structural similarity.
+
     % FK: I feel you need to motivate why this is beneficial more.
     % FK: This needs more explanation.
 
@@ -322,83 +385,129 @@
     This study was approved by the local ethics committee. \marginnote{R3.1}
     \hl{Three volunteers with informed consent obtained before scanning
     participated in this study.}
-    Detailed acquisition parameters are listed below.
+    Detailed acquisition protocols are listed in \cref{TAB:ACQ}.
 
-    \subsubsection{20-diffusion-direction 6-shot acquisition
-    at \SI{1.0}{\cubic\milli\meter} isotropic resolution
-    and $b$-value \SI{1000}{s/mm^2}}
-    \label{SEC:ACQ_6shot}
+    \newcolumntype{a}{p{0.30\textwidth}}
+    \newcolumntype{b}{p{0.14\textwidth}}
+    \begin{threeparttable}
+        \centering
+        \caption{NAViEPI acquisition protocols}
+        \label{TAB:ACQ}
+        \begin{tabular}{ a | b b b b }
+            \toprule
+            \multirow{2}{*}{\textbf{Protocol}} & \multicolumn{2}{c}{$\mathbf{1.0}$~\textbf{mm isotropic}} & \multicolumn{2}{c}{\textbf{sub-millimeter}} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+            & \#1 & \#2 & \#3 & \#4 \\ \hline
+            \rowcolor{gray!20} Diffusion mode & \multicolumn{2}{c}{MDDW~\tnote{1}} & \multicolumn{2}{c}{3-scan trace} \\
+            Diffusion scheme & \multicolumn{4}{c}{monopolar} \\
+            \rowcolor{gray!20} Diffusion direction & \multicolumn{2}{c}{$20$} & \multicolumn{2}{c}{$3$} \\
+            $b$-value (\si{s/mm^2}) & \multicolumn{4}{c}{1000} \\
+            \rowcolor{gray!20} Voxel size (\si{\cubic\mm}) & \multicolumn{2}{c}{$1.0$} & \multicolumn{2}{c}{$0.5\times0.5\times2.0$} \\
+            Slices & \multicolumn{2}{c}{$141$} & \multicolumn{2}{c}{$60$} \\
+            \rowcolor{gray!20} FOV (\si{\square\mm}) & \multicolumn{2}{c}{$200$} & \multicolumn{2}{c}{$220$} \\
+            Base resolution & \multicolumn{2}{c}{$200$} & \multicolumn{2}{c}{$440$} \\
+            \rowcolor{gray!20} Navigator & No & Yes & Yes & No \\
+            Shots & $4$ & $3$ & $5$ & $1$ \\
+            \rowcolor{gray!20} TR (\si{ms}) & $7700$ & $7600$ & $4400$ & $8000$ \\
+            TEs (\si{ms}) & $67$ & $58/78$ & $58/95.1$ & $143$ \\
+            \rowcolor{gray!20} Echo spacing (\si{ms}) & $1.02$ & $1.08$ & $1.52$ & $1.48$ \\
+            Bandwidth (\si{Hz/Pixel}) & \multicolumn{2}{c}{$1086$} & \multicolumn{2}{c}{$758$} \\
+            \rowcolor{gray!20} Partial Fourier & \multicolumn{4}{c}{$6/8$} \\
+            Acceleration~\tnote{2} & $1\times3$ & $3\times3$ & \multicolumn{2}{c}{$3\times2$} \\
+            \rowcolor{gray!20} TA (\si{\minute})~\tnote{3} & $10:42$ & $8:02$ & $1:38$ & $0:46$ \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}{\footnotesize
+        	\item[1] MDDW: Multi-direction diffusion weighting;
+            \item[2] Acceleration: Both in-plane and slice undersampling were employed, denoted as ($R_\text{in-plane} \times R_\text{slice}$). For instance, $3\times2$ means 3-fold in-plane undersampling and multi-band factor 2;
+            \item[3] TA: Total acquisition time.}
+        \end{tablenotes}
+    \end{threeparttable}
 
-    This protocol employed \SI{200}{\milli\meter} FOV
-    in both read and phase-encoding directions,
-    base resolution 200, 141 slices, bandwidth \SI{1086}{Hz/Pixel},
-    echo spacing \SI{1.06}{ms}, TE \SI{59}{ms}, TR \SI{7600}{ms}.
-    Six shots per diffusion encoding with partial Fourier $6/8$
-    along the phase-encoding direction was used to
-    acquire in-plane full-sampled data.
-    In other words, except partial Fourier,
-    no in-plane undersampling was used.
-    Slice accleration with a multi-band factor $3$ was used.
+	\subsubsection{20-diffusion-direction acquisition
+		at \SI{1.0}{\cubic\milli\meter} isotropic resolution}
 
-    \marginnote{R1.1}
-    \hl{The acquired data served as ground truth.
-    We retrospectively reduced the data to only two shots
-    per diffusion encoding with and without the proposed $k_y$ shifting
-    to simulate three-fold in-plane undersampling.
-    JETS reconstruction was performed on all data to validate
-    the proposed two-shot $k_y$-shifted acquisition.}
+	As listed in \cref{TAB:ACQ}, Protocol \#1
+	with six-shot iEPI and without in-plane undersampling
+	was implemented. This protocol represents the acquisition scheme
+	employed in many existing multi-shot reconstruction techniques,
+	(e.g., MUSE, SPA-LLR, and JULEP).
+	\marginnote{R1.1, R1.2}
+	\hl{The acquired data from this protocol served as ground truth.
+    Different reconstruction methods,
+    i.e., JETS, MUSE, and JULEP were compared.}
 
-    \marginnote{R1.2}
-    \hl{In addition, different reconstruction methods,
-    i.e., JETS, MUSE, and JULEP were performed on the six-shot data
-    to validate the JETS reconstruction quality.}
+	\marginnote{R1.1}
+	\hl{We then retrospectively reduced the four-shot data to only one shot
+		per diffusion encoding without and with the proposed $k_y$ shifting
+		to simulate three-fold in-plane undersampling.
+		JETS reconstruction was performed on all data to validate
+		the proposed $k_y$-shifted acquisition.}
 
-    \subsubsection{Single-shell diffusion acquisition at \hl{\mbox{\SI{1.2}{\cubic\milli\meter} isotropic resolution}}} \marginnote{R1.11}
-    \label{SEC:ACQ1.2mm}
 
-    This protocol employed \SI{220}{\milli\meter} FOV in both read and phase-encoding directions,
-    base resolution 182, 94 slices, bandwidth \SI{1832}{Hz/Pixel},
-    echo spacing \SI{0.75}{ms}, TE \SI{47}{ms}, TR \SI{4300}{ms},
-    2 shots per diffusion direction,
-    in-plane undersampling $3$ as well as partial Fourier $6/8$ along the phase-encoding direction,
-    and multi-band factor $2$. This results in $8.7 \times 2$ fold undersampling per shot.
-    30 diffusion directions with $b$-value \SI{1000}{s/mm^2} and
-    2 diffusion directions with $b$-value \SI{50}{s/mm^2} were acquired
-    at a total scan time of \hl{\mbox{\SI{5.05}{\minute}}}. \marginnote{R3.24}
-    Given the high spatial resolution and the short scan time,
-    this protocol fits well into clinical studies.
+    \subsubsection{3-scan trace acquisition at $0.5\times0.5\times2.0$~\si{\cubic\milli\meter} voxel size}
 
-    \subsubsection{Three-shell diffusion acquisition at \hl{\mbox{\SI{1}{\cubic\milli\meter} isotropic resolution}}}
-    \label{SEC:ACQ1.0mm}
-    This protocol employed the same FOV, shots,
-    in-plane undersampling, and partial Fourier
-    as \hl{in} \cref{SEC:ACQ1.2mm}. \marginnote{R1.22}
-    Other parameters were base resolution 214, 114 slices, bandwidth \SI{1460}{Hz/Pixel},
-    echo spacing \SI{0.81}{\milli\second}, TE \SI{66}{\milli\second}, TR \SI{5200}{ms},
-    and multi-band factor $3$. This results in $8.7 \times 3$ fold undersampling per shot.
-    As shown in \cref{FIG:sampling} (C), three shells were sampled
-    (\nth{1} shell: 20 diffusion directions with $b$-value \SI{1000}{s/mm^2},
-    \nth{2} shell: 30 diffusion directions with $b$-value \SI{2000}{s/mm^2}, and
-    \nth{3} shell: 64 diffusion directions with $b$-value \SI{3000}{s/mm^2}).
-    \marginnote{R3.26}
-    $b_0$ \hl{acquisitions} were interspersed every ten diffusion directions.
-    This corresponds to a total of 126 DW acquisition volumes and
-    \hl{\mbox{\SI{22.42}{\minute}}} scan time.
-    This protocol \hl{was used to} demonstrate \marginnote{R1.23}
-    the capabilities of JETS-EPI in achieving high
-    spatial-angular-temporal resolution.
+    As listed in \cref{TAB:ACQ},
+    Protocol \#4 was implemented based on
+    NAViEPI with five shots per diffusion encoding.
+    This protocol was compared against single-shot EPI (Protocol \#3)
+    with the same spatial resolution and acceleration,
+    such as to demonstrate the sampling efficiency of NAViEPI.
+
+    % To demonstrate the acquisition efficiency of NAViEPI,
+    % a sub-millimeter protocol was implemented.
+    % This protocol employed \SI{220}{\milli\meter} FOV
+    % in both read and phase-encoding directions,
+    % base resolution 440, 60 slices, bandwidth \SI{758}{Hz/Pixel},
+    % echo spacing \SI{1.52}{ms}, TEs \SI{$58/95.1$}{ms}, TR \SI{4400}{ms}.
+    % Five shots per diffusion encoding with partial Fourier $6/8$
+    % along the phase-encoding direction was used.
+
+
+
+
+%    \subsubsection{Single-shell diffusion acquisition at \hl{\mbox{\SI{1.2}{\cubic\milli\meter} isotropic resolution}}} \marginnote{R1.11}
+%    \label{SEC:ACQ1.2mm}
+%
+%    This protocol employed \SI{220}{\milli\meter} FOV in both read and phase-encoding directions,
+%    base resolution 182, 94 slices, bandwidth \SI{1832}{Hz/Pixel},
+%    echo spacing \SI{0.75}{ms}, TE \SI{47}{ms}, TR \SI{4300}{ms},
+%    2 shots per diffusion direction,
+%    in-plane undersampling $3$ as well as partial Fourier $6/8$ along the phase-encoding direction,
+%    and multi-band factor $2$. This results in $8.7 \times 2$ fold undersampling per shot.
+%    30 diffusion directions with $b$-value \SI{1000}{s/mm^2} and
+%    2 diffusion directions with $b$-value \SI{50}{s/mm^2} were acquired
+%    at a total scan time of \hl{\mbox{\SI{5.05}{\minute}}}. \marginnote{R3.24}
+%    Given the high spatial resolution and the short scan time,
+%    this protocol fits well into clinical studies.
+%
+%    \subsubsection{Three-shell diffusion acquisition at \hl{\mbox{\SI{1}{\cubic\milli\meter} isotropic resolution}}}
+%    \label{SEC:ACQ1.0mm}
+%    This protocol employed the same FOV, shots,
+%    in-plane undersampling, and partial Fourier
+%    as \hl{in} \cref{SEC:ACQ1.2mm}. \marginnote{R1.22}
+%    Other parameters were base resolution 214, 114 slices, bandwidth \SI{1460}{Hz/Pixel},
+%    echo spacing \SI{0.81}{\milli\second}, TE \SI{66}{\milli\second}, TR \SI{5200}{ms},
+%    and multi-band factor $3$. This results in $8.7 \times 3$ fold undersampling per shot.
+%    As shown in \cref{FIG:sampling} (C), three shells were sampled
+%    (\nth{1} shell: 20 diffusion directions with $b$-value \SI{1000}{s/mm^2},
+%    \nth{2} shell: 30 diffusion directions with $b$-value \SI{2000}{s/mm^2}, and
+%    \nth{3} shell: 64 diffusion directions with $b$-value \SI{3000}{s/mm^2}).
+%    \marginnote{R3.26}
+%    $b_0$ \hl{acquisitions} were interspersed every ten diffusion directions.
+%    This corresponds to a total of 126 DW acquisition volumes and
+%    \hl{\mbox{\SI{22.42}{\minute}}} scan time.
+%    This protocol \hl{was used to} demonstrate \marginnote{R1.23}
+%    the capabilities of JETS-EPI in achieving high
+%    spatial-angular-temporal resolution.
 
     \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{../figures/fig1.png}
         \caption{(A) An example DW-MRI acquisition
-        with two-shot interleaved EPI acquisition.
+        with three-shot interleaved EPI acquisition.
         (B) The proposed $k_y$ shifted diffusion encoding scheme.
-        This example employs two shots per DW image.
-        Therefore, every two columns have the same color.
-        (C) An example multi-shell sampling scheme.
-        (D) Low rankness of local image patches (as extracted from the yellow blocks)
-        along multi-shell diffusion encoding.}
+        This example employs three shots per DW image.
+        Therefore, every three columns have the same color.}
         \label{FIG:sampling}
     \end{figure}
 
@@ -416,11 +525,13 @@
 
     First, the acquired $k$-space data $\mathbf{y}$ is mapped from
     individual shot images $\mathbf{x}_{q,s,z}$ via the forward model,
+
     \begin{align}
-        \mathbf{y}_{c,q,s} &= \mathbf{P}_{q,s} \mathbf{\Sigma} \mathbf{\Theta}_{z} \mathbf{F} \mathbf{S}_c \mathbf{x}_{q,s,z} \\
+        \mathbf{y}_{c,q,s} &= \mathbf{P}_{q,s} \mathbf{\Sigma} \mathbf{\Theta}_{z} \mathbf{F} \mathbf{S}_c \mathbf{x}_{q,s,z} \nonumber \\
         \mathbf{y} &\coloneqq \mathbf{E}_1 \mathbf{x} \label{EQU:model_shot}
     \end{align}
-    Here, the encoding matrix $\mathbf{E}_1$ comprises a chain of linear operators.
+    Here, the encoding matrix $\mathbf{E}_1$ comprises
+    a chain of linear operators.
     Every shot image $\mathbf{x}$ is point-wise multiplied
     by a set of coil sensitivity maps ($\mathbf{S}$) and Fourier transformed ($\mathbf{F}$).
     The output is then point-wise multiplied by the multi-slice phase map ($\mathbf{\Theta}$)
@@ -434,6 +545,13 @@
     the sampling pattern of \hl{each} diffusion encoding and shot.
     \marginnote{R1.27}
 
+    % The SMS modeling in \cref{EQU:model_shot} directly encodes
+    % the SMS phase shift into the forward model
+    % and reflects how the pulse sequence is programmed.
+    % Therefore, this physics-driven model differs from
+    % other existing methods, e.g.,NEATR
+    % NEATR  and JULEP
+
     Second, for diffusion MRI based on multi-shot EPI,
     \hl{multiple shots acquired for a given} diffusion encoding
     \marginnote{R1.28}
@@ -443,7 +561,7 @@
     or root-sum-squares (RSS) \citep{mani_2017_mussels}
     of shot images.
     This method is robust to \hl{in-plane} motion, \marginnote{R3.27}
-    but sub-optimal with respect to SNR
+    but sub-optimal concerning SNR
     \citep{guhaniyogi_2016_amuse}.
     Alternatively, shot combination \hl{can be done} \marginnote{R1.30}
     via shot-to-shot phase variation correction
@@ -472,70 +590,89 @@
 
     % ============================== %
     \subsection{Joint $k$-$q$-slice reconstruction}
+    \label{SUBSEC:JETS}
 
+    % TODO: iterative phase smoothing
     Based on the generalized forward models in \cref{EQU:model_shot,EQU:model_dwi},
     our proposed joint $k$-$q$-slice reconstruction can be formulated as a three-step approach.
 
     \begin{enumerate}[I.]
-        \item Joint reconstruction of all shot images
-        by solving the following inverse problem with
-        the LLR regularization:
+        \item \textbf{Navigator echo reconstruction}.
+        The acquisition of navigator echoes follows the forward model
+        in \cref{EQU:model_shot}, so the reconstruction of navigator echoes
+        can be formulated as:
         \begin{equation}
             \mathrm{argmin}_\mathbf{x} \left\| \mathbf{y} - \mathbf{E}_1 \mathbf{x} \right\|_2^2
-            + \lambda \left\| \mathbf{T} \mathbf{x} \right\|_*
-            \label{EQU:solve_shot}
+            + \lambda \mathbf{R}(\mathbf{x})
+            \label{EQU:solve_navi}
         \end{equation}
-            Note that this step suffices in the case of single-shot EPI acquisition.
+    	where $\mathbf{R}(\mathbf{x})$ denotes the regularization functional
+    	with the regularization strength $\lambda$.
+    	In this work, $\ell^2$ regularization was used,
+    	i.e.,~$\mathbf{R}(\mathbf{x}) = \left\lVert \mathbf{x} \right\rVert_2^2$.
 
-        \item For multi-shot EPI acquisition,
-        shot-to-shot phase variation is extracted from $\mathbf{x}$.
+        \item \textbf{Iterative phase smoothing}.
+        Shot-to-shot phase variation was extracted from
+        the reconstructed navigator echo phases.
         \marginnote{R1.13}
         \hl{Assuming that phase images are spatially smooth}
         \citep{chen_2013_muse,dai_2023_julep},
-        only the central quarter $k$-space region of $\mathbf{y}$
-        is used to solve for $\mathbf{x}$.
-        Afterward, the reconstructed $\mathbf{x}$ is interpolated to the full FOV.
-        The corresponding phase is then filtered by the Hanning window.
+        we employed the iterative approach to smooth phase,
+        \begin{equation}
+        	\mathbf{x}^{(k+1)} = \mathbf{F}^{-1} \mathcal{H} \mathbf{F} \mathbf{x}^{(k)}
+        	\label{EQU:ITER_PHASE}
+        \end{equation}
+    	where the index $k$ denotes the iteration,
+    	and $x^{(0)}$ is then the reconstructed navigator image from Step I.
+    	$\mathcal{H}$ is the Hanning window.
 
-        \item Joint reconstruction of all DW images using
+        \item \textbf{Shot-combined reconstruction}.
+        Joint reconstruction of all DW images using
         the shot-combined forward model $\mathbf{E}_2$
-        with shot-to-shot phase variation from Step II:
+        with shot-to-shot phase variation from Step II reads:
         \begin{equation}
             \mathrm{argmin}_\mathbf{\tilde{x}} \left\| \mathbf{y} - \mathbf{E}_2 \mathbf{\tilde{x}} \right\|_2^2
             + \lambda \left\| \mathbf{T} \mathbf{\tilde{x}} \right\|_*
             \label{EQU:solve_dwi}
         \end{equation}
+    	Here, LLR regularization was employed in the local spatial-diffusion matrices,
+    	based on the theory of partially separable functions
+    	\citep{liang_2007_psf,trzasko_2011_lr,zhang_2015_llr}.
+    	$\mathbf{T}$ represents a linear operator that firstly slides a local patch window
+    	through all DW images and then
+    	flattens every set of local \hl{patches} \marginnote{R1.36}
+    	to two-dimensional (2D) matrices,
+        comprising spatial and diffusion dimensions.
+    	The nuclear norm regularization is enforced via
+    	singular value thresholding (SVT) of all flattened 2D matrices
+        \citep{cai_2010_svt}.
+    	We implemented this regularization term as \hl{a proximal operator}
+    	\citep{beck_2017_optim}. \marginnote{R3.28}
+
+        \marginnote{R1.14}
+        \hl{This work employed blipped-CAIPI SMS
+        \mbox{\citep{setsompop_2012_blipped}},
+        in which spatially separated slices are simultaneously
+        excited and acquired.
+        Therefore, 2D instead of 3D patches were used to
+        construct the spatial-diffusion matrices.}
+
+    	It has been reported that LLR
+        is prone to checkerboard artifacts
+    	when $\lambda$ is too large \citep{hu_2020_spa_llr}.
+    	We overcame this problem by utilizing overlapping blocks and
+    	providing an efficient implementation.
+    	If the blocks overlap, $\mathbf{T}^H \mathbf{T}~\mathrm{input} \neq \mathrm{input}$,\marginnote{R3.30}
+    	where $\mathbf{T}^H$ denotes the \hl{Hermitian} adjoint operator of $\mathbf{T}$.
+    	This is because overlapping values are summed in the output of $\mathbf{T}^H$.
+    	Our efficient implementation was to scale $\mathbf{T}^H$
+    	as $(1 / \mathrm{divisor})\mathbf{T}^H$,
+    	where the divisor matrix was obtained by $\mathbf{T}^H \mathbf{T}~\mathbf{1}$.
+    	$\mathbf{1}$ denoted the matrix of \hl{all ones}
+        \marginnote{R3.11, R3.31}
+    	with the same shape as \hl{the input}.
+
     \end{enumerate}
-
-    % ============================== %
-    \subsection{Locally low rank (LLR) regularization}
-
-        % FK: I feel you need to motivate more why the matrix has low rank than just showing a plot of a single example
-    As shown in \cref{FIG:sampling} (D), low rankness exists
-    in local patches from multi-shell DW images.
-    Intuitively, low rankness comes from the contrast variation feature of DW images.
-    This motivates the application of LLR regularization \citep{trzasko_2011_lr,zhang_2015_llr}
-    for solving the inverse problems in \cref{EQU:solve_shot,EQU:solve_dwi}.
-    Here, $\lambda$ is the regularization strength ($\lambda \geq 0$).
-    $\mathbf{T}$ represents a linear operator that firstly slides a local patch window
-    through all DW images and then
-    flattens every set of local \hl{patches} \marginnote{R1.36}
-    to two-dimensional (2D) matrices.
-    The nuclear norm regularization is enforced via
-        singular value thresholding of all flattened 2D matrices \citep{cai_2010_svt}.
-    We implemented this regularization term as \hl{a proximal operator}
-    \citep{beck_2017_optim}. \marginnote{R3.28}
-
-    It has been reported that LLR is prone to checkerboard artifacts
-    when $\lambda$ is too large \citep{hu_2020_spa_llr}.
-    We overcome this problem by utilizing overlapping blocks and providing an efficient implementation.
-    If the blocks overlap, $\mathbf{T}^H \mathbf{T}~\mathrm{input} \neq \mathrm{input}$,\marginnote{R3.30}
-    where $\mathbf{T}^H$ denotes the \hl{Hermitian} adjoint operator of $\mathbf{T}$.
-    Our efficient implementation is to scale $\mathbf{T}^H$
-    as $(1 / \mathrm{divisor})\mathbf{T}^H$,
-    where the divisor matrix is obtained by $\mathbf{T}^H \mathbf{T}~\mathbf{1}$.
-    $\mathbf{1}$ denotes the matrix of \hl{all ones} \marginnote{R3.11}
-    with the same shape as \hl{the input}. \marginnote{R3.31}
 
     % ============================== %
     \subsection{Reconstruction}
@@ -549,7 +686,7 @@
     With this pre-processing as well as
     \marginnote{R1.39}
     the implemented forward models and \hl{proximal operator},
-    both inverse problems in \cref{EQU:solve_shot,EQU:solve_dwi} were solved by
+    the inverse problem in \cref{EQU:solve_dwi} was solved by
     the alternating direction method of multipliers (ADMM) \citep{boyd_2010_admm}.
 
     ADMM solves the minimization problems in an alternating update scheme,
@@ -588,17 +725,16 @@
 
     We compared our proposed joint reconstruction
     with established multi-shot reconstruction techniques,
-    specifically, MUSE \citep{chen_2013_muse},
-    MUSSELS \citep{bilgic_2019_neatr},
+    specifically, MUSE \citep{chen_2013_muse}
     and JULEP \citep{dai_2023_julep}.
     \marginnote{R1.3}
     \hl{Here, MUSE and JULEP are hosted on GitHub by Dr.~Dai,
     and MUSSELS with the multi-band reconstruction feature
     is made available by Dr.~Bilgic.
     Further, we performed
-    the local-PCA denoising \mbox{\citep{manjon_2013_localpca}}
-    as implemented in DIPY \mbox{\citep{garyfallidis_2014_dipy}}
-    on the MUSE reconstructed DW images.}
+    the local-PCA denoising \mbox{\citep{cordero_2019_cplxdwi}}
+    as implemented in MRtrix \mbox{\citep{Tournier_2019_mrtrix}}
+    on the MUSE reconstructed complex DW images.}
 
     With reconstructed DW images, fractional anisotropy (FA) maps
     \citep{basser_1994_dmri} were fitted using our implementation in Python,
@@ -617,140 +753,304 @@
     \section{Results}
     \label{SEC_Resl}
 
-    \subsection{\hl{Validation of the proposed two-shot EPI acquisition via retrospectively undersampling from a six-shot EPI acquisition}}
-    \marginnote{R1.1}
+    % ========= %
+    \subsection{Iterative smoothing of shot-to-shot phase variation}
 
-    JETS reconstruction results on
-    the six-shot prospectively fully-sampled data
-    from the acquisition protocol in \cref{SEC:ACQ_6shot},
-    as well as on the retrospectively undersampled two-shot data
-    without and with the proposed $k_y$ shift
-    are displayed in \cref{FIG:gt_6shot}.
-    Noticeable signal loss can be observed in the 2-shot reconstruction
-    without $k_y$ shift, as indicated by red arrows.
-    In contrast, the visible difference between the 6-shot and
-    the $k_y$-shifted 2-shot reconstructions is smaller,
-    especially in the averged DW image.
-    This is also confirmed with the quantitative comparison
-    of the normalized root mean square error (NRMSE),
-    as listed in the bottom right of difference images.
-    The NRMSE values are lower in the reconstruction
-    with $k_y$ shifting,
-    indicating a closer match with the 6-shot reconstruction.
-
-
-
-    % \subsection{Single-shell diffusion acquisition at \SI{1.2}{\milli\meter} isotropic resolution}
-
-    % \cref{FIG:1.2mm_DWI_cFA} displays a DW image
-    % for one diffusion direction and zoomed-in colored FA maps from
-    % MUSE, MUSE with denoising, MUSSELS, and JETS reconstruction.
-    % Both MUSE and MUSSELS exhibit residual noise artifacts
-    % for the single-shell acquisition with the $b$-value of \SI{1000}{s/mm^2}.
-    % The local PCA denoiser removes noise, but the denoised DW image loses fine structures,
-    % e.g.~the~cuneus (highlighted by the arrows in the figure).
-    % This over-smoothing effect can also be observed in the colored FA map,
-    % where the thin fibers near to gray matter are missing.
+    Navigators were acquired with the acceleration rate
+    as listed in \cref{TAB:ACQ}.
+    Besides, the base resolution of navigators
+    was smaller than imaging echoes.
+    As a result, reconstructed navigator phases
+    (refer to the first column in \cref{FIG:iter_phase})
+    from Step I in \cref{SUBSEC:JETS}
+    are not spatially smooth.
+    Such phases, when used in the shot-combined reconstruction,
+    result in signal void artifacts in DW images.
+    To address this problem, we utilized the iterative smoothing procedure.
+    As show in \cref{FIG:iter_phase},
+    the ripple-like phase artifact disapper after five iterations.
+    It can also be seen that such iterative procedure retains
+    the shot-to-shot phase variation.
 
     \begin{figure}
         \centering
         \includegraphics[width=0.85\linewidth]{../figures/fig2.png}
-        \caption{\protect\marginnote{R1.1}[0cm]
-            JETS reconstruction results on
-            (1st column) the 6-shot sampled data from \cref{SEC:ACQ_6shot},
-            the retrospectively undersampled 2-shot data
-            (2nd column) without $k_y$ shift as well as
-            (3rd column) with $k_y$ shift.
-            Difference images were obtained by
-            subtracting the 6-shot from
-            the 2-shot reconstructed images.
-            \textbf{(A)} and \textbf{(B)} display
-            the 8th DW and the averaged DW images,
-            respectively.}
-        \label{FIG:gt_6shot}
+        \caption{Iterative smoothing of shot-to-shot phase variation
+        according to \cref{EQU:ITER_PHASE}.
+        Navigators from Protocol \#3 were reconstructed
+        based on Step I in \cref{SUBSEC:JETS}
+        and then used as the input (iter \#0, left column).}
+        \label{FIG:iter_phase}
     \end{figure}
 
 
-    \subsection{Three-shell diffusion acquisition at \SI{1.0}{\milli\meter} isotropic resolution}
+    % ========= %
+    \subsection{\hl{Comparison to MUSE and JULEP with four-shot iEPI acquisition}}
+    \marginnote{R1.1, R1.2}
 
-    Results for a \SI{1.0}{mm} isotropic resolution three-shell 126-direction
-    diffusion acquisition are show in \cref{FIG:1.0mm_DWI}.
-    At this resolution, a severe reduction of SNR can be observed
-    for higher $b$-values.
-    With such low SNR levels, brain structures are completely buried below the noise level
-    in MUSE and MUSSELS.
-    The local PCA denoiser removes noise efficiently from the reconstructed MUSE images,
-    but images from higher $b$-values suffer from severe blurring that leads to
-    a loss of fine image details.
-    Only the proposed JETS method with the combination of the $k_y$-shift encoding scheme
-    and LLR regularized reconstruction allows for the resolution of brain features for higher $b$-values.
+    The iterative phase smoothing was also applicable to
+    MUSE-type self-navigating reconstruction,
+    where shot phases were
+    reconstructed from imaging echoes.
+    \cref{FIG:4shot_comp} compares our proposed JETS with
+    MUSE \citep{chen_2013_muse},
+    MUSE with complex-valued local-PCA denoiser
+    \citep{cordero_2019_cplxdwi},
+    and JULEP \citep{dai_2023_julep}.
+    The residual noise from MUSE can be largely removed
+    by the denoiser. However, when compared to JETS,
+    the denoiser shows residual noise patterns within
+    the globus pallidus (indicated by the red arrow).
+    JETS also shows better denoising than JULEP.
+    The reason is that JETS enforces spatial-diffusion regularization,
+    whereas JULEP formulates structured low-rank regularization
+    of the four shots for one diffusion encoding.
 
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{../figures/fig3.png}
-        \caption{Comparison of reconstructed DW images on
-            three-shell diffusion acquisition at
-            \SI{1}{\milli\meter} isotropic resolution.
-            DW images of the \nth{60} slice for one diffusion direction at different $b$-values are displayed:
-                (left) 1000, (center) 2000, and (right) 3000~\si{s/mm^2}.}
-        \label{FIG:1.0mm_DWI}
+        \caption{Reconstructed DW images
+        (the 8th diffusion encoding)
+        based on 4-shot iEPI acquisition with 1~mm isotropic resolution
+        (Protocol \#1 in \cref{TAB:ACQ}).
+        Four reconstruction methods are compared (from left to right):
+        JETS, MUSE, MUSE with denoiser, and JULEP.
+        The 2nd row displays the magnified views of the yellow square.}
+        \label{FIG:4shot_comp}
     \end{figure}
 
-    \cref{FIG:1.0mm_FA} shows fitted FA maps
-    in three orthogonal orientations
-    based on the above four DW image reconstruction methods.
-    Corresponding color-coded FA maps are provided
-    in Supporting Information Figure S6.
-    % (Although DW images are noisy from both MUSE and MUSSELS,
-    % parameter fitting (e.g., FA) reduces noise in the fitted maps.
-    % FK: I am not sure we should make this statement. Doesn't this mean that we are simply seeing fits where the high-b-value information is lost, because the diffusion information is below the noise level? So the FA maps may look better visually than the DWIs, but they still contain less information)
-    All FA maps are displayed with the same windowing,
-    i.e., minimal and maximal values set as 0 and 1, respectively.
-    The FA maps from MUSE with local PCA denoising
-    exhibit much lower values than other methods.
-    This may be caused by the excessive noise in DW images from MUSE
-    or by the automatic noise estimate in the local PCA denoising algorithm
-    \citep{veraart_2016_denoise}.
-    Among all methods, FA maps from JETS show better quality
-    and delineate fine details within the putamen (see white arrows).
+
+    % ========= %
+    \subsection{\hl{Retrospectively undersampling from the four-shot iEPI acquisition}}
+    \marginnote{R1.1}
+
+    JETS reconstruction results on
+    the four-shot prospectively fully-sampled data
+    from Protocol \#1 in \cref{TAB:ACQ},
+    as well as on the retrospectively undersampled one-shot data
+    without and with the proposed $k_y$ shift
+    are displayed in \cref{FIG:retro}.
+    Residual aliasing artifacts are visible in the reconstruction
+    without $k_y$ shifting, as pointed by the red arrows.
+    On the contrary, the reconstruction
+    with the proposed $k_y$ shifting among diffusion encodings
+    shows much reduced aliasing, reduced noise, and higher SSIM.
 
     \begin{figure}
         \centering
-        \includegraphics[width=0.85\textwidth]{../figures/fig4.png}
-        \caption{Comparison of reconstructed FA maps based on
-            the \SI{1}{mm} isotropic resolution
-        three-shell diffusion acquisition.
-        One slice from every orientation
-        (axial, coronal, and sagittal view from left to right)
-        was selected for display.}
-        \label{FIG:1.0mm_FA}
+        \includegraphics[width=\textwidth]{../figures/fig4.png}
+        \caption{Quantitative validation of the proposed
+        $k_y$-shift enoding sampling pattern
+        based on 4-shot iEPI acquisition with 1~mm isotropic resolution
+        (Protocol \#1 in \cref{TAB:ACQ}).
+        (Top) the 8th diffusion encoding and
+        (bottom) mean DWI over 20 diffusion encodings.
+        (1st column) JETS reconstruction of 4-shot iEPI acquisition
+        is used as the ground truth.
+        The 2nd and the 3rd column displays JETS reconstruction
+        of retrospecitvely undersampled
+        1-shot acquisition without and with $k_y$ shifting,
+        respectively.
+        structural similarity (SSIM) values are computed and
+        displayed in the bottom right corners.}
+        \label{FIG:retro}
     \end{figure}
 
-    \cref{FIG:1.0mm_fODF} shows fODF maps
-        within the rectangular regions in \cref{FIG:1.0mm_FA}.
-        This result again demonstrates
-        the advantage of iterative reconstruction with LLR regularization
-        for DW image denoising.
-        Both MUSE and MUSSELS reconstructions suffer from noise artifacts due to
-        the use of highly accelerated acquisition ($R = 8.7 \times 3$ per shot)
-        and high $b$-values (up to \SI{3000}{s/mm^2}).
-        As a result, their corresponding fODF maps illustrate chaotic fiber orientation.
-        With the local PCA denoiser applied to DW images reconstructed by MUSE,
-        the fODF peaks show improved \hl{smoothness}, \marginnote{R1.44}
-        but the FA values are reduced
-        due to excessive noise in DW images.
-        In contrast, with LLR regularization applied to
-        the \hl{spatial-diffusion} patches, \marginnote{R1.45}
-        JETS is able to resolve crossing fibers in the intersection of corpus callosum
-        and superior longitudinal fasciculus (see white arrows).
+
+    % ========= %
+    \subsection{\hl{Analysis of reconstruction parameters}}
+    \marginnote{R1.4}
+
+    Here we provide a systematic analysis of
+    the proposed JETS reconstruction
+    with LLR regularization applied to
+    the spatial-diffusion dimension.
+
+    First, we varied the regularization strength $\lambda$
+    from $0$, to $0.08$, and to $0.16$.
+    The reconstruction with $\lambda = 0$ in \cref{EQU:solve_dwi}
+    corresponds to parallel imaging reconstruction
+    without LLR regularization.
+    It is worth noting that the proposed NAViEPI sequence
+    demonstrates high-quality sub-millimeter DW images
+    ($0.5\times0.5\times2.0$~\si{\cubic\mm} in this example).
+    The DW images can be further improved
+    with the use of LLR regularization, i.e., reduced noise,
+    as seen in the reconstruction with $\lambda=0.08$.
+    Increasing $\lambda$ (e.g.~$0.16$) further reduces noise,
+    but at the cost of increased blurring.
+    Therefore, $\lambda=0.08$ was selected in this work.
+
+    Second, besides the regularization strength,
+    the block size (i.e., the width of square 2D patches) also
+    plays a role in denoising.
+    Here, the block size of $3$ shows the best denoising
+    as compared to $6$ and $9$,
+    especially in the peripheral brain region.
+    According to \citep{cordero_2019_cplxdwi},
+    it is suggested to keep the patch size roughly equal to
+    the diffusion encoding length.
+    In this 3-scan trace acquisition example,
+    the diffusion encoding length is $4$
+    (1 $b_0$ plus 3 orthogonal diffusion directions).
+    Among the tested block sizes, $3$ is the closest to $4$,
+    and hence renders better denoising,
+    whereas the other block sizes may require stronger
+    regularization strength.
+    In practice, we also observed that smaller block sizes
+    construct smaller matrices for SVT and thus
+    lead to shorter computation time.
+
+    Third, we varied the stride, i.e.,
+    the increment from one local patch to the next.
+    When the block size equals the stride ($6$ in this example),
+    it refers to non-overlapping LLR,
+    which is prone to checkerboard artifacts
+    even with the use of random shifting \citep{saucedo_2017_randomshift}
+    in each ADMM iteration,
+    as indicated by the red arrows in the magnified views
+    of \cref{FIG:ablation}.
+    Therefore, we utilized the overlapping LLR with the stride of $1$,
+    which requires the implementation of the scaling matrix
+    in \cref{SUBSEC:JETS} to avoid the summation of overlapped pixels.
+    The drawback of overlapping LLR, however, is the increased number
+    of matrices for SVT and hence the increased computation time
+    \citep{saucedo_2017_randomshift}.
+
 
     \begin{figure}
         \centering
-        \includegraphics[width=0.9\textwidth]{../figures/fig5.png}
-        \caption{Comparison of fODF peaks within the dashed rectangles
-        of (red) the axial and (blue) the coronal slices in \cref{FIG:1.0mm_FA}, respectively.}
-        \label{FIG:1.0mm_fODF}
+        \includegraphics[width=\textwidth]{../figures/fig5.png}
+        \caption{Analysis of reconstruction parameters based on
+        the 3-scan trace acquisition with $0.5\times0.5\times2.0$~mm$^3$
+        (Protocol \#3 in \cref{TAB:ACQ}).
+        Displayed are JETS reconstructed single-direction DW images.
+        \textbf{(A)} Varying the regularization strength $\lambda$
+        from $0$ to $0.08$ and $0.16$.
+        \textbf{(B)} Varying the block size from $3$ to $6$ and $9$.
+        \textbf{(C)} Varying the stride size from $1$ to $3$ and
+        $6$ (non-overlapping).}
+        \label{FIG:ablation}
     \end{figure}
+
+    % ========= %
+    \subsection{\hl{Sampling efficiency of NAViEPI}}
+    \marginnote{R3.5}
+
+    As shown in \cref{FIG:0.5mm_shots},
+    NAViEPI achieves sub-millimeter resolution
+    (voxel size $0.5\times0.5\times2.0$~mm$^3$)
+    with the use of 5-shot acquisition.
+    When compared to the single-shot acquisition
+    with the same voxel size,
+    the acquisition time of NAViEPI is about two times longer,
+    but the image quality of NAViEPI is remarkably improved.
+
+    In the sub-millimeter imaging scenario,
+    the increased base resolution requires longer TE (\SI{143}{\ms})
+    in the single-shot acquisition,
+    which results in significant signal loss due to $T_2$ relaxation.
+    Therefore, sub-millimeter DWI necessitates multi-shot acquisition,
+    which is subject to shot-to-shot phase variation and long scan time.
+    However, NAViEPI solves both challenges.
+    The 5-shot acquisition reduces TE to \SI{58}{\ms},
+    and thus retains SNR significantly
+    compared to the single-shot acquisition.
+    Moreover, the JETS reconstruction can help to reduce noise
+    and improve structural visibility.
+
+    \marginnote{R1.7}
+    \cref{FIG:0.5mm_slice} shows the JETS reconstructed $b_0$
+    and TRACE images in different slice locations.
+    Admittedly, the lower brain region (e.g.~slice \#22)
+    exhibits inhomogeneous and lower signal intensity
+    than the upper slices.
+    Such inhomogeneity can be alleviated with
+    the use of multi-channel parallel transmission
+    \citep{katscher_2003_ptx,grissom_2010_ptx}.
+
+
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/fig6.png}
+        \caption{Sampling efficiency of the proposed NAViEPI sequence.
+        5-shot NAViEPI acquisition with the voxel size
+        $0.5\times0.5\times2.0$~mm$^3$ (Protocol \#3)
+        was compared with single-shot EPI acquisition (Protocol \#4).
+        Both the 1st and the 2nd columns were reconstructed
+        via parallel imaging without LLR regularization,
+        whereas the 3rd column was reconstructed via JETS.}
+        \label{FIG:0.5mm_shots}
+    \end{figure}
+
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/fig7.png}
+        \caption{Reconstruction of the 3-scan trace acquisition with
+        the voxel size $0.5\times0.5\times2.0$~mm$^3$ (Protocol \#3)
+        at different slices.}
+        \label{FIG:0.5mm_slice}
+    \end{figure}
+
+
+
+    % \subsection{Three-shell diffusion acquisition at \SI{1.0}{\milli\meter} isotropic resolution}
+
+    % Results for a \SI{1.0}{mm} isotropic resolution three-shell 126-direction
+    % diffusion acquisition are show in \cref{FIG:1.0mm_DWI}.
+    % At this resolution, a severe reduction of SNR can be observed
+    % for higher $b$-values.
+    % With such low SNR levels, brain structures are completely buried below the noise level
+    % in MUSE and MUSSELS.
+    % The local PCA denoiser removes noise efficiently from the reconstructed MUSE images,
+    % but images from higher $b$-values suffer from severe blurring that leads to
+    % a loss of fine image details.
+    % Only the proposed JETS method with the combination of the $k_y$-shift encoding scheme
+    % and LLR regularized reconstruction allows for the resolution of brain features for higher $b$-values.
+
+    % \cref{FIG:1.0mm_FA} shows fitted FA maps
+    % in three orthogonal orientations
+    % based on the above four DW image reconstruction methods.
+    % Corresponding color-coded FA maps are provided
+    % in Supporting Information Figure S6.
+
+    % All FA maps are displayed with the same windowing,
+    % i.e., minimal and maximal values set as 0 and 1, respectively.
+    % The FA maps from MUSE with local PCA denoising
+    % exhibit much lower values than other methods.
+    % This may be caused by the excessive noise in DW images from MUSE
+    % or by the automatic noise estimate in the local PCA denoising algorithm
+    % \citep{veraart_2016_denoise}.
+    % Among all methods, FA maps from JETS show better quality
+    % and delineate fine details within the putamen (see white arrows).
+
+    % \cref{FIG:1.0mm_fODF} shows fODF maps
+    %     within the rectangular regions in \cref{FIG:1.0mm_FA}.
+    %     This result again demonstrates
+    %     the advantage of iterative reconstruction with LLR regularization
+    %     for DW image denoising.
+    %     Both MUSE and MUSSELS reconstructions suffer from noise artifacts due to
+    %     the use of highly accelerated acquisition ($R = 8.7 \times 3$ per shot)
+    %     and high $b$-values (up to \SI{3000}{s/mm^2}).
+    %     As a result, their corresponding fODF maps illustrate chaotic fiber orientation.
+    %     With the local PCA denoiser applied to DW images reconstructed by MUSE,
+    %     the fODF peaks show improved \hl{smoothness}, \marginnote{R1.44}
+    %     but the FA values are reduced
+    %     due to excessive noise in DW images.
+    %     In contrast, with LLR regularization applied to
+    %     the \hl{spatial-diffusion} patches, \marginnote{R1.45}
+    %     JETS is able to resolve crossing fibers in the intersection of corpus callosum
+    %     and superior longitudinal fasciculus (see white arrows).
+
+    % \begin{figure}
+    %     \centering
+    %     \includegraphics[width=\textwidth]{../figures/fig5.png}
+    %     \caption{Comparison of fODF peaks within the dashed rectangles
+    %     of (red) the axial and (blue) the coronal slices in \cref{FIG:1.0mm_FA}, respectively.}
+    %     \label{FIG:1.0mm_fODF}
+    % \end{figure}
 
     \clearpage
 
@@ -758,81 +1058,97 @@
     \section{Discussion}
     \label{SEC:Disc}
 
-    This work reports a novel DW-MRI technique, \hl{dubbed JETS-EPI}, \marginnote{R3.45}
-    comprising two ingredients,
-    multi-band $k_y$-shift-encoded interleaved EPI
-    for complementary $k$-$q$-space sampling, and
-    a generalized joint reconstruction
-    with overlapping locally low-rank regularization
-    to explore low rankness along the diffusion encoding dimension.
-    JETS-EPI utilizes only two shots \hl{per diffusion-weighted image}, \marginnote{R3.46}
-    thereby allowing for short scan times
-    as well as high spatial resolution with reduced geometric distortion.
-    Our reconstruction uses $8.7 \times 3$ ($R_\mathrm{in-plane} \times \mathrm{SMS}$)
-    fold accelerated brain DW-MRI at \SI{7}{\tesla}
-    with \SI{1}{mm} isotropic resolution
-    and 126 diffusion-direction (three shells with
-    $b$-values of $1000$, $2000$, and \SI{3000}{s/mm^2})
-    in less than \SI{23}{min}.
+    This work reports a novel DW-MRI technique, JETS-NAViEPI.
+    NAViEPI (1) achieves the fast and efficient acquisition of
+    both imaging and navigator echoes,
+    (2) enforces consistent bandwidth between the echoes, and
+    (3) allows for undersampled iEPI as well as a large number of shots.
+    Moreover, compared to the single-shot acquisition,
+    joint $k$-$q$-space reconstruction
+    with $k_y$-shift encoding on NAViEPI
+    retains SNR and reduces aliasing artifacts in DW images.
+    As a result, JETS-NAViEPI renders high spatiotemporal resolution
+    diffusion MRI protocols in \SI{7}{\tesla},
+    e.g., 3-scan trace acquisition with the voxel size
+    $0.5\times0.5\times2.0$~mm$^3$ at \SI{1.5}{\minute}.
     % (FK: This is more or less a repetition of the results section. We should discuss here what the reason for the improved performance is)
 
-    The reconstruction results from MUSE and MUSSELS
-    suffer from noise effects in this study,
-    and the reasons are two-fold.
-    First, the high in-plane undersampling factor per shot
-    hinders shot-to-shot phase variation estimation in MUSE,
-    whereas we proposed to jointly reconstruct all shot images from the central $k$-space data.
-    Further, joint reconstruction benefits from the complementary $k$-$q$-space sampling,
-    as compared to the shot-by-shot parallel imaging reconstruction.
-    Second, structured low-rank matrix completion as \hl{used by} MUSSELS usually \marginnote{R3.47}
-    works with at least four shots per diffusion direction,
-    whereas this study uses only two shots.
-    The use of two shots is beneficial for shorter scan time than four shots,
-    but hinders the structured low rank property in MUSSELS.
-
-    One limitation of JETS-EPI is the long reconstruction time
+    One limitation of JETS-NAViEPI is the long reconstruction time
     due to the simultaneous reconstruction of all DW images and
     the use of overlapping locally low-rank regularization.
-    The reconstruction of the protocols in \cref{SEC:ACQ1.2mm} and \cref{SEC:ACQ1.0mm} \marginnote{R3.48}
-    \hl{on an A100 GPU} takes about \SI{0.5}{\hour} and \SI{3}{\hour} per collapsed slice, respectively.
-    To reduce the computation time, coil compression algorithms \citep{huang_2008_scc}
+    The reconstruction for the Protocol \#3 in \cref{TAB:ACQ}
+    \marginnote{R3.48}
+    \hl{on an A100 GPU} takes about \SI{2}{\minute} per multi-band slice.
+    To reduce the computation time, coil compression algorithms
+    \citep{buehrer_2007_scc,huang_2008_scc}
     can be employed to reduce the number of coils for image reconstruction.
-    Moreover, one may deploy multi-GPU distributed computing or modern optimization algorithms
-    (e.g.~stochastic gradient descent) \citep{ong_2020_extreme} to speed up the reconstruction.
+    Moreover, one may deploy multi-GPU distributed computing
+    or modern optimization algorithms
+    (e.g.~stochastic gradient descent) \citep{ong_2020_extreme}
+    to speed up the reconstruction.
 
-    Another limitation of JETS-EPI is the self-navigated shot-to-shot phase variation estimation,
-    which was performed based on the central quarter $k$-space region of every shot.
-    These shot $k$-space data is highly undersampled with $R = 8.7 \times 3$
-    for the \SI{1}{mm} three-shell diffusion acquisition.
-    Such high undersampling may result in sub-optimal phase estimation,
-    especially in regions with low SNR and/or rapid phase change.
+    \marginnote{R1.5}
+    \hl{Neither the signal modeling in
+    \mbox{\cref{EQU:model_shot,EQU:model_dwi}}
+    nor the LLR regularization considers the subject motion.
+    In the presence of motion, the regularized reconstruction may degrade.
+    To overcome this problem, scout-informed motion estimation
+    and reconstruction \mbox{\citep{polak_2022_samer}}
+    could be integrated into the framework.}
 
-    \marginnote{R1.5, R3.2}
-    \hl{To be discussed: LLR regularization performance and reliability may degrade in the presence of motion. Also, often DWI is performed with alternating PEs for distortion correction. SNR is heterogeneous over the FOV, which may not be appropriately covered by a single regularization weight. Please, add these aspects to discussion. See also minor point 5.}
+    \hl{Another potential extension of this work is
+    to incorporate distortion correction.
+    The standard distortion correction method is
+    known as TOPUP \mbox{\citep{andersson_2003_topup}},
+    which acquires two scans
+    with opposing phase-encoding directions to
+    obtain the field inhomogeneity map and
+    then performs conjugate phase reconstruction
+    to correct for distortion.}
+
+    \hl{This work employed a single regularization weight \mbox{$\lambda$}
+    to enforce low rankness along the spatial-diffusion direction.
+    However, SNR may be heterogeneous within the FOV.
+    Therefore, one single regularization scalar may be inadequate
+    to cover the whole FOV.
+    Beyond this SVT-based machine-learning reconstruction,
+    one may seek to learn a $q$-space prior as the regularizer
+    \mbox{\citep{hammernik_2018_varnet,mani_2021_qmodel}}.}
+
 
     \marginnote{R1.13}
-    \hl{Discussion on phase: Think you should add a bit more on this topic to discussion, as phase behaviour depends on several hard-to-control factors such as pulsatile motion, its impact at different locations within the brain, diffusion sensitization strength, bulk motion, ...}
+    \hl{Although NAViEPI employs navigators for
+    the acquisition of shot-to-shot phase variation,
+    it is worth noting that phase behavior depends on
+    several hard-to-control factors
+    such as pulsatile motion, bulk motion,
+    locations within the brain, and
+    diffusion sensitization strength.
+    Therefore, more comprehensive modeling or post-processing
+    such as image registration may be considered in future work.}
 
-
-
-    While this work reconstructs all DW images and then performs model fitting,
-    an alternative approach is to directly estimate $b_0$ and diffusion tensors
-    from measured $k$-$q$-space data using model-based reconstruction
+    While this work reconstructs all DW images and
+    then performs model fitting,
+    an alternative approach is to directly estimate
+    $b_0$ and diffusion tensors
+    from measured $k$-$q$-space data
+    using model-based reconstruction
     \citep{knoll_2015_mobadiff,dong_2018_mobadiff,shafieizargar_2023_adept}.
     Compared to DW image reconstruction,
     model-based reconstruction \hl{solves for a fewer number of unknowns}, \marginnote{R3.49}
-    but requires strict diffusion tensor modeling and the use of nonlinear least square solvers.
+    but requires strict diffusion tensor modeling
+    and the use of nonlinear least square solvers.
 
     % ************************************************************************ %
     \section{Conclusions}
     \label{SEC:Conc}
 
-    We demonstrated the JETS-EPI technique, which integrates
+    We demonstrated the JETS-NAViEPI technique, which integrates
     a $k_y$-shifted encoding interleaved EPI sequence and
     a joint reconstruction with overlapping locally low-rank regularization
     for high spatial-angular-temporal resolution DW-MRI at \SI{7}{\tesla}.
-    This technique requires no phase navigation,
-    and allows for high-quality DW image reconstruction with accelerated acquisitions.
+    This technique allows for high-quality DW image reconstruction
+    with accelerated acquisitions.
 
     % ************************************************************************ %
     \section*{Funding}
@@ -867,6 +1183,8 @@
         (\url{https://github.com/daiep/JULEP}) on GitHub,
         and \hl{Dr.~Zhiyong Zhang} for sharing the SPA-LLR source code
         (\url{https://github.com/ZZgroupSJTU/PMCmsDTI}) on GitHub.
+        The authors also thank Dr.~Philipp Ehses for the discussion on
+        the use of twixtools (\url{https://github.com/pehses/twixtools}).
 
     %% The Appendices part is started with the command \appendix;
     %% appendix sections are then done as normal sections
@@ -881,7 +1199,7 @@
     %%  \bibliographystyle{elsarticle-harv}
     %%  \bibliography{<your bibdatabase>}
 
-    \bibliographystyle{elsarticle-harv}
+    \bibliographystyle{elsarticle-harv}  % unsrt
     \bibliography{ref}
 
 \end{document}
