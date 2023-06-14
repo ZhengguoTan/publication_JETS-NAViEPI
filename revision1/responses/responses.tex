@@ -72,7 +72,7 @@
     \item \textit{Authors do not compare with JULEP, DAGER or SPA-LLR but these are cited as state of the art methods (more recent than MUSE and MUSSELS). Therefore, authors should also compare with these methods or else precisely indicate why are these left aside.}
 
     \hspace{1em} Thank you for the suggestion.
-    We compared with MUSE, MUSSELS, and JULEP.
+    We compared with MUSE and JULEP.
     We didn't compare with DAGER
     because DAGER was proposed for single-shot EPI acquisition.
     We did not compare with SPA-LLR because
@@ -92,7 +92,8 @@
     utilizing the readout extended FOV concept.
     However, in this revision, we compared with JULEP instead.
 
-    \hspace{1em} Considering the major comment from Reviewer \#3 (R3.6),
+    \hspace{1em} For local PCA, considering the major comment
+    from Reviewer \#3 (R3.6),
     we decided to compare with Cordero-Grande, et al.~Neuroimage (2019)
     \href{https://doi.org/10.1016/j.neuroimage.2019.06.039}{10.1016/j.neuroimage.2019.06.039}.
 
@@ -100,6 +101,7 @@
 
     \hspace{1em} Thank you for the suggestion.
     We have conducted the sensitivity analysis and ablation experiments.
+    Please refer to Figures 5 and 6.
 
     \item \textit{LLR regularization performance and reliability may degrade in the presence of motion. Also, often DWI is performed with alternating PEs for distortion correction. SNR is heterogeneous over the FOV, which may not be appropriately covered by a single regularization weight. Please, add these aspects to discussion. See also minor point 5.}
 
@@ -118,8 +120,16 @@
 
     \item \textit{\url{https://github.com/ZhengguoTan/sigpy} seems a link to a generic tool. \url{https://doi.org/10.5281/zenodo.7548595} is not available yet. Please, remember to provide paper-specific links before acceptance or otherwise remove these links from the manuscript.}
 
-    \hspace{1em} We forked sigpy (\url{https://github.com/mikgroup/sigpy}) for the development of
-    our proposed reconstruction. We promise to publish our source codes in the forked sigpy.
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{fig_zenodo.png}
+        \caption{Reserved Zenodo link for the host of all raw data in this work.}
+        \label{FIG:Zenodo}
+    \end{figure}
+
+    \hspace{1em} \url{https://github.com/ZhengguoTan/sigpy} was forked
+    from the original sigpy (\url{https://github.com/mikgroup/sigpy})
+    for the development of our proposed reconstruction.
 
     \hspace{1em} As shown in \cref{FIG:Zenodo},
     \url{https://doi.org/10.5281/zenodo.7548595} is a link we reserved
@@ -127,12 +137,6 @@
     upon the publication of our manuscript.
     Therefore, we would like to keep this link in the manuscript.
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=\textwidth]{fig_zenodo.png}
-        \caption{Reserved Zenodo link for the host of all raw data in this work.}
-        \label{FIG:Zenodo}
-    \end{figure}
 \end{enumerate}
 
 
@@ -175,7 +179,7 @@
 
     \hspace{1em} Thank you for the question.
     Please refer to R2.1 as well as the notebook for detailed explanation:
-    \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+    \url{https://github.com/ZhengguoTan/demo_jets_diffusion_mri_7t}.
 
     \item \textit{L181: "efficient implementation" \textrightarrow claim on efficiency does not seem supported from description... inverse density weighting is well-known for reconstructing original data levels back when slide-windowing. You should provide more details on efficiency or articulate description differently. Importantly, overlap ratio does not seem to be reported, but this may have a dramatic effect in computational cost.}
 
@@ -267,6 +271,8 @@
 
     \item \textit{L168: "Intuitively, low rankness comes from contrast variation feature of DW images" \textrightarrow meaning unclear to me, you may reword.}
 
+    \hspace{1em} Thank you. Done.
+
     \item \textit{L173: "patchs" \textrightarrow "patches".}
 
     \hspace{1em} Done.
@@ -276,6 +282,8 @@
     \hspace{1em} Done.
 
     \item \textit{L185: "The acquired raw data was read by twixtools (URL)" \textrightarrow not adding much, could be specified in code repo.}
+
+    \hspace{1em} Yes, we agree.
 
     \item \textit{L191: "the proximal operator" \textrightarrow "proximal operator".}
 
@@ -327,7 +335,9 @@
 \begin{enumerate}
     \item \textit{It is not clear how the operator $T$ in Eq.~6 treats the multiple patches of the image. A graphical illustration of how the patches are combined to a 2D matrix whose nuclear norm is then taken would be helpful.}
 
-    Thank you for the suggestion. We made a Google Colab to illustrate the operator $T$: \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+    Thank you for the suggestion. We made an interactive demo
+    to illustrate the operator $T$:
+    \url{https://github.com/ZhengguoTan/demo_jets_diffusion_mri_7t}.
 
     \item \textit{When the EPI segments are initially reconstructed to obtain the phase errors (Eq.~5), the related images surely represent single diffusion weighting. What is the T operator doing then in this equation? There is no diffusion dimension yet to impose a low rank approximation.}
 
@@ -347,7 +357,7 @@
     \item \textit{Is there any importance in the way the sampling shift is distributed among diffusion weightings?}
 
     \hspace{1em} In this work, multi-band and in-plane undersampled
-    two-shot interleaved EPI was proposed.
+    interleaved EPI was proposed.
     With in-plane undersampling,
     it is indeed important to have $k_y$ shifting.
     Please refer to the above-mentioned comparison in the manuscript.
@@ -425,7 +435,7 @@
     We compare our proposed sequence NAViEPI with single-shot EPI
     for the acquisition of sub-millimeter
     ($0.5 \times 0.5 \times 2$~\si{mm^3}) diffusion-weighted images.
-    Please refer to Figure \hl{xx} in the manuscript.
+    Please refer to Figure 7 in the manuscript.
 
     \item \textit{The denoising approach used as comparison does not reflect the state of the art. It is generally recommended to perform denoising on complex data (see Cordero-Grande, et al. Neuroimage (2019) \url{https://doi.org/10.1016/j.neuroimage.2019.06.039}), as this will avoid the noise floor issues that are apparent in the MUSE + Denoiser panel in Fig. 3. This should be completely possible for the Authors, as they reconstruct the data themselves. I would say the only reason not to do complex denoising at this point is if you are stuck with only scanner reconstructed magnitude data. Complex denoising is available in openly available toolboxes, e.g. MRtrix3 (\url{https://mrtrix.readthedocs.io/en/latest/reference/commands/dwidenoise.html}).}
 
@@ -434,7 +444,7 @@
     including MUSE.
     We installed the MRtrix tool, and were able to use
     the denoising approach on complex MUSE images.
-    Please refer to Figure \hl{xx} in the manuscript.
+    Please refer to Figure 4 in the manuscript.
 
 %    \begin{figure}[ht]
 %        \centering
@@ -473,8 +483,9 @@
 
     \item \textit{The "efficient implementation" to correct checkerboard artefacts (lines 177--183) seems very underspecified. Perhaps it would be better developed in an appendix and just mentioned in the main text? Specific points:}
 
-    \hspace{1em} Please refer to the Jupyter Notebook on the explanation of the implementation:
-    \url{https://colab.research.google.com/drive/1XQSH3FOiDUOMaPcloTkMyZxOGxk0wd5j?usp=sharing}.
+    \hspace{1em} Please refer to the open-source interactive demo
+    on the explanation of our implementation:
+    \url{https://github.com/ZhengguoTan/demo_jets_diffusion_mri_7t}.
 
         \begin{itemize}
             \item [-] \textit{is $(1/divisor)$ a matrix inverse of $(T'*T*1)$? Or is it rather a scalar derived by solving the linear equation $(T'*T*1) =$ (something)?}
@@ -527,7 +538,7 @@
 \begin{enumerate}[resume]
     \item \textit{line 22: "spiral" is not a multi-shot EPI technique.}
 
-    \hspace{1em} Thank you. We removed spiral here.
+    \hspace{1em} Thank you. We removed "spiral".
 
     \item \textit{line 37: should be "single shot images", not just "shot images"?}
 
@@ -565,7 +576,8 @@
 
     \item \textit{line 107: why are the b=0 images referred to as b = 50 $s/mm^2$ images here, but $b_0$ acquisitions for the three shell protocol? This should be standardised.}
 
-    % TODO:
+    \hspace{1em} Thank you. The acquisition protocol has been standardised.
+    Please refer to Table 1 in the manuscript.
 
     \item \textit{line 107, 119: why is minutes$'$seconds$''$ notation used here but "min" elsewhere? Recommend standardising, especially since the used of minutes$'$seconds$''$ is fairly old-fashioned...}
 
@@ -575,7 +587,8 @@
 
     \hspace{1em}
     The different $b$-values were collected one after the other.
-    In other words, we first acquired 20 diffusion encoding at the $b$-value of \SI{1000}{s/mm^2},
+    In other words, we first acquired 20 diffusion encoding
+    at the $b$-value of \SI{1000}{s/mm^2},
     then 32 diffusion encoding at the $b$-value of \SI{2000}{s/mm^2},
     and finally 64 diffusion encoding at the $b$-value of \SI{3000}{s/mm^2}.
 
