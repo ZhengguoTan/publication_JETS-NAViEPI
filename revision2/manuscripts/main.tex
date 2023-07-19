@@ -77,9 +77,6 @@
 
     \begin{frontmatter}
 
-        % \title{Accelerated Diffusion Weighted Magnetic Resonance Imaging at 7~T: Joint Reconstruction for Multi-Shell Multi-Band Shift-Encoded Echo Planar Imaging (JETS-EPI)
-        % }
-
         \title{Accelerated Diffusion Weighted Magnetic Resonance Imaging at 7~T: Joint Reconstruction for Shift-Encoded Navigator-based Interleaved Echo Planar Imaging (JETS-NAViEPI)
         }
 
@@ -253,7 +250,7 @@
 
     Alternatively, navigator-based iEPI acquisition has been proposed
     \citep{jeong_2013_navims,dai_2017_navi,dai_2018_navi}.
-    These proposals may allow for a larger number of shots,
+    These proposals allow for a larger number of shots,
     and hence higher spatial resolution.
     However, due to the use of different ESP
     between the imaging echo and the navigator echo,
@@ -1111,7 +1108,7 @@
     To reduce the computation time, coil compression algorithms
     \citep{buehrer_2007_scc,huang_2008_scc}
     can be employed to reduce the number of coils for image reconstruction.
-    Moreover, one may deploy multi-GPU distributed computing
+    Moreover, one can deploy multi-GPU distributed computing
     or modern optimization algorithms
     (e.g.~stochastic gradient descent) \citep{ong_2020_extreme}
     to speed up the reconstruction.
@@ -1119,7 +1116,7 @@
     Neither the signal modeling in
     \cref{EQU:model_shot,EQU:model_dwi}
     nor the LLR regularization considers the subject motion.
-    In the presence of motion, the regularized reconstruction may degrade.
+    In the presence of motion, the regularized reconstruction can degrade.
     To overcome this problem, scout-informed motion estimation
     and reconstruction \citep{polak_2022_samer}
     could be integrated into the framework.
@@ -1146,7 +1143,7 @@
     to cover the whole FOV.
     Beyond this SVT-based reconstruction,
     \marginnote{R249.Minor.26}
-    \hl{one may seek to use machine learning to
+    \hl{one can seek to use machine learning to
     learn a $q$-space prior as the regularizer}
     \citep{hammernik_2018_varnet,lam_2019_mrsi,mani_2021_qmodel}.
 
@@ -1158,7 +1155,7 @@
     locations within the brain, and
     diffusion sensitization strength.
     Therefore, more comprehensive modeling or post-processing
-    such as image registration may be considered in future work.
+    such as image registration can be considered in future work.
 
     \marginnote{R248.3b}
     \hl{potential synergies between their LLR and the denoiser}
