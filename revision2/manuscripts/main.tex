@@ -243,10 +243,10 @@
     This indicates that increasing the number of shots in MUSE
     will result in higher undersampling per shot,
     and consequently, degrade shot phase estimation \citep{wu_2017_diff}.
-    On the other hand, the use of in-plane fully-sampled four-shot iEPI
-    is challenging at ultra-high field (e.g.~\SI{7}{\tesla}),
-    because the SAR is linearly proportional
-    to the square of the field strength.
+    % On the other hand, the use of in-plane fully-sampled four-shot iEPI
+    % is challenging at ultra-high field (e.g.~\SI{7}{\tesla}),
+    % because the SAR is linearly proportional
+    % to the square of the field strength.
 
     Alternatively, navigator-based iEPI acquisition has been proposed
     \citep{jeong_2013_navims,dai_2017_navi,dai_2018_navi}.
@@ -258,7 +258,7 @@
     between the two echoes and thus required specific compensation methods.
     In contrast, rsEPI \citep{porter_2009_resolve,heidemann_2010_resolve7t}
     used the same readout segment for both echoes,
-    and thus required no correction of the navigator echo.
+    and thus required no distortion correction of navigator echoes.
 
     Beyond the MUSE-type parallel imaging reconstruction,
     compressed sensing \citep{lustig_2007_cs,block_2007_cs}
@@ -373,7 +373,7 @@
     and a limited number of shots,
     We propose NAVigator-based interleaved EPI (NAViEPI),
     as illustrated in \cref{FIG:seq}.
-    Moreover, inspired by rsEPI \citep{porter_2009_resolve},
+    Inspired by rsEPI \citep{porter_2009_resolve},
     NAViEPI enforces a consistent effective ESP
     between the imaging and the navigator echo,
     thereby minimizing distortion mismatch between the two echoes.
@@ -422,12 +422,12 @@
             \toprule
             \multirow{2}{*}{\textbf{Protocol}} & \multicolumn{2}{c}{$\mathbf{1.0}$~\textbf{mm isotropic}} & \multicolumn{2}{c}{\textbf{sub-millimeter}} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
             & \#1 & \#2 & \#3 & \#4 \\ \hline
-            \rowcolor{gray!20} Diffusion mode & \multicolumn{2}{c}{MDDW~\tnote{1}} & \multicolumn{2}{c}{3-scan trace} \\
+            \rowcolor{gray!20} Diffusion mode & \multicolumn{2}{c}{MDDW~\tnote{(1)}} & \multicolumn{2}{c}{3-scan trace} \\
             Diffusion scheme & \multicolumn{4}{c}{monopolar} \\
             \rowcolor{gray!20} Diffusion direction & $20$ & $114$ & \multicolumn{2}{c}{$3$} \\
-            $b$-value (\si{s/mm^2}) & $1000$ & 3-shell~\tnote{2} & \multicolumn{2}{c}{$1000$} \\
+            $b$-value (\si{s/mm^2}) & $1000$ & 3-shell~\tnote{(2)} & \multicolumn{2}{c}{$1000$} \\
             \rowcolor{gray!20} $b_0$ & $0$ & $12$ & \multicolumn{2}{c}{1} \\
-            FOV (\si{\square\mm}) & $200$ & \multicolumn{3}{c}{$220$} \\
+            FOV (\si{\square\mm}) & $200$ & $214$ & \multicolumn{2}{c}{$220$} \\
             \rowcolor{gray!20} In-plane resolution (\si{\square\mm}) & \multicolumn{2}{c}{$1.0$} & \multicolumn{2}{c}{$0.5$} \\
             Slice thickness (\si{\mm}) & \multicolumn{2}{c}{$1.0$} & \multicolumn{2}{c}{$2.0$} \\
             \rowcolor{gray!20} Slices & $141$ & $114$ & \multicolumn{2}{c}{$60$} \\
@@ -438,17 +438,17 @@
             ESP (\si{ms}) & $1.02$ & $0.81$ & $1.52$ & $1.48$ \\
             \rowcolor{gray!20} Bandwidth (\si{Hz/Pixel}) & $1086$ & $1460$ & \multicolumn{2}{c}{$758$} \\
             Partial Fourier & \multicolumn{4}{c}{$6/8$} \\
-            \rowcolor{gray!20} Acceleration~\tnote{3} & $1\times3$ & $3\times3$ & \multicolumn{2}{c}{$3\times2$} \\
-            TA (\si{\minute})~\tnote{4} & $10:42$ & $22:25$ & $1:38$ & $0:46$ \\
+            \rowcolor{gray!20} Acceleration~\tnote{(3)} & $1\times3$ & $3\times3$ & \multicolumn{2}{c}{$3\times2$} \\
+            TA (\si{\minute})~\tnote{(4)} & $10:42$ & $22:25$ & $1:38$ & $0:46$ \\
             \bottomrule
         \end{tabular}
         \begin{tablenotes}{\footnotesize
-        	\item[1] MDDW: Multi-direction diffusion weighting;
-        	\item[2] 3-shell: $20$, $30$, and $64$ directions
+        	\item[(1)] MDDW: Multi-direction diffusion weighting;
+        	\item[(2)] 3-shell: $20$, $30$, and $64$ directions
             with $b$-values of
             $1000$, $2000$,and \SI{3000}{s/mm^2}, respectively;
-            \item[3] Acceleration: Both in-plane and slice undersampling can be employed, denoted as ($R_\text{in-plane} \times R_\text{slice}$);
-            \item[4] TA: Total acquisition time.}
+            \item[(3)] Acceleration: Both in-plane and slice undersampling can be employed, denoted as ($R_\text{in-plane} \times R_\text{slice}$);
+            \item[(4)] TA: Total acquisition time.}
         \end{tablenotes}
     \end{threeparttable}
 
@@ -522,9 +522,9 @@
     to validate the proposed $k_y$-shifted acquisition.
 
 
-    \subsubsection{\hl{Three-shell direction acquisition
+    \subsubsection{\hl{Three-shell acquisition
     at \mbox{\SI{1}{\milli\meter}} isotropic resolution}}
-    \marginnote{R248.Major.3c} % TODO:
+    \marginnote{R248.Major.3c}
 
     Protocol \#2 in \cref{TAB:ACQ} was implemented
     for multi-shell diffusion tensor imaging (DTI)
@@ -618,7 +618,8 @@
     where the encoding matrix $\mathbf{E}_2$ comprises the chain of
     the shot-to-shot phase variation $\mathbf{\Phi}$ and
     the encoding matrix $\mathbf{E}_1$.
-    We implemented these two encoding matrices in SigPy \citep{ong_2019_sigpy}.
+    We implemented these two encoding operators
+    in SigPy \citep{ong_2019_sigpy}.
 
 
     % ============================== %
@@ -773,12 +774,10 @@
     ($\mathcal{T}$) with the thresholding parameter $\lambda / \rho$.
     The coupling parameter $\rho$ is effective in both the update of $\mathbf{x}$ and $\mathbf{z}$.
     It acts as Tikhonov regularization strength when updating $\mathbf{x}$,
-    but also inversely scales the thresholding strength when updating $\mathbf{z}$,
-    as shown in Supporting Information Figures S1 and S2.
+    but also inversely scales the thresholding strength when updating $\mathbf{z}$.
 
-    In this work, 15 ADMM iterations with $\rho = 0.05$ and $\lambda = 0.04$,
-    and a block size of 6 for LLR (refer to Supporting Information Figure S3)
-    were used.
+    In this work, 15 ADMM iterations with $\rho = 0.05$
+    and $\lambda = 0.08$ were used.
     All reconstructions were done on a single A100 SXM4/NVLink GPU
     with \SI{40}{GB} memory (NVIDIA, Santa Clara, CA, USA).
 
@@ -792,9 +791,18 @@
     as implemented in MRtrix \citep{Tournier_2019_mrtrix}
     on the MUSE reconstructed complex DW images.
 
-    With reconstructed DW images from Protocol \#2 in \cref{TAB:ACQ},
-    color-coded fractional anisotropy (cFA) maps
-    \citep{basser_1994_dmri} were fitted using DiPy \citep{garyfallidis_2014_dipy},
+    The in vivo data acquired from Protocol \#2 in \cref{TAB:ACQ}
+    consisted of 126 diffusion directions,
+    which exceeds the available GPU memory.
+    Therefore, the 126 data volumes were uniformly split
+    into three parts for our JETS reconstruction
+    with a LLR block width of 6 and the LLR regularization
+    in both Steps I and III in \cref{SUBSEC:JETS}.
+    In addition, MUSE reconstruction was also performed,
+    followed by the local-PCA denoising.
+    Reconstructed DWIs were then processed
+    by DiPy \citep{garyfallidis_2014_dipy}
+    to obtain color-coded fractional anisotropy (cFA) maps.
 
     \pagebreak
 
@@ -910,12 +918,14 @@
     without and with the proposed $k_y$ shift
     are displayed in \cref{FIG:retro}.
     Residual aliasing artifacts are visible in the reconstruction
-    \marginnote{R249.Minor.17}
+    \marginnote{R249.Minor.17, 18, 20}
     without $k_y$ shifting, as \hl{indicated} by the red arrows.
-    \marginnote{R249.Minor.18}
-    \hl{In contrast}, the reconstruction
-    with the proposed $k_y$ shifting among diffusion encodings
-    shows much reduced aliasing, reduced noise, and higher SSIM.
+    \hl{In contrast, the $k_y$ shifting scheme supplies a complementary
+    $k$-$q$-space sampling pattern,
+    which is beneficial for joint reconstructions such as JETS.
+    As shown in \mbox{\cref{FIG:retro}}, JETS results in
+    improved SSIM values and reduced aliasing artifacts,
+    when compared to the reconstruction without $k_y$ shifting.}
 
 
     \begin{figure}
@@ -1048,35 +1058,42 @@
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{../figures/fig9.png}
-        \caption{(Left) Mean DWI, (middle) cFA, and
-        (right) cFA in the zoomed-in region
-        based on JETS reconstructed DWI from Protocol \#2.
-        Three orthogonal slices (transversal, sagittal, and coronal)
-        are displayed from top to bottom.}
+        \caption{Comparison of three-shell DWIs and
+        cFA maps with data acquired by Protocol \#2 in \cref{TAB:ACQ}.
+        Reconstruction methods from top to bottom were
+        MUSE, MUSE with the local-PCA denoiser,
+        and the proposed JETS method.}
         \label{FIG:1.0mm_dti}
     \end{figure}
 
-    \subsection{Diffusion tensor imaging}
+    \subsection{Diffusion tensor imaging} % TODO:
 
-    Since 30 diffusion encodings were acquired in Protocol \#2,
-    the block size in LLR regularization was lifted to $6$,
-    such that the spatial-diffusion matrix for SVT
-    has similar width and height.
-    The other parameter were kept the same as found in \cref{FIG:ablation}.
+    Protocol \#2 in \cref{TAB:ACQ} yields an acceleration factor of
+    $6 \times 3$ per shot, resulting in severe noise amplification
+    in MUSE reconstructed DWIs, as shown in \cref{FIG:1.0mm_dti}.
+    The local-PCA denoiser substantially removes noise,
+    but the DWI at high $b$-values still illustrates more noise,
+    compared to the proposed JETS reconstruction.
 
-    The mean DWIs in \cref{FIG:1.0mm_dti} illustrate
-    high spatial resolution and high SNR.
-    In line with \cref{FIG:0.5mm_slice},
-    we can notice the signal loss in the cerebellum region,
-    due to the use of single-channel transmission in this work.
-    On the other hand, the reconstructed cFA maps in \cref{FIG:1.0mm_dti}
-    show clear fiber orientation in all orientations.
-    Moreover, tiny fiber structures can be visualized
-    in the zoomed-in cFA maps.
-    Because of the low signal sensitivity surrounding the cerebellum,
-    residual artifacts are visible in the zoomed-in sagittal view.
-    To enhance the DTI fitting performance, one possibility is to
-    acquire more diffusion encodings.
+    % Since 30 diffusion encodings were acquired in Protocol \#2,
+    % the block size in LLR regularization was lifted to $6$,
+    % such that the spatial-diffusion matrix for SVT
+    % has similar width and height.
+    % The other parameter were kept the same as found in \cref{FIG:ablation}.
+
+    % The mean DWIs in \cref{FIG:1.0mm_dti} illustrate
+    % high spatial resolution and high SNR.
+    % In line with \cref{FIG:0.5mm_slice},
+    % we can notice the signal loss in the cerebellum region,
+    % due to the use of single-channel transmission in this work.
+    % On the other hand, the reconstructed cFA maps in \cref{FIG:1.0mm_dti}
+    % show clear fiber orientation in all orientations.
+    % Moreover, tiny fiber structures can be visualized
+    % in the zoomed-in cFA maps.
+    % Because of the low signal sensitivity surrounding the cerebellum,
+    % residual artifacts are visible in the zoomed-in sagittal view.
+    % To enhance the DTI fitting performance, one possibility is to
+    % acquire more diffusion encodings.
 
     \clearpage
 
@@ -1158,7 +1175,18 @@
     such as image registration can be considered in future work.
 
     \marginnote{R248.3b}
-    \hl{potential synergies between their LLR and the denoiser}
+    \hl{This work compared LLR regularized JETS to
+    MUSE post-processed by the local PCA denoiser
+    \mbox{\citep{cordero_2019_cplxdwi}}.
+    Technically, the LLR regularization is realized
+    by soft thresholding of the singular values
+    of the spatial-diffusion matrices, whereas
+    the denoiser performs hard thresholding.
+    Both approaches demonstrate effective noise removal.
+    In the scenario of accelerated acquisitions,
+    one can employ both approaches to maximally boost SNR,
+    i.e., the use of LLR regularization for image reconstruction
+    followed by the denoiser as a post-processing step.}
 
     While this work reconstructs all DW images and
     then performs model fitting,
@@ -1186,8 +1214,12 @@
     % ************************************************************************ %
     \section*{Funding}
 
-    This work was supported by Deutsche Forschungsgemeinschaft (DFG) -- Project Number 513220538,
-    as well as National Institutes of Health (NIH) R01 EB024532 and P41 EB017183.
+    Funding by the German Research Foundation (DFG)
+    is gratefully acknowledged
+    (projects 513220538, 512819079;
+    and project 500888779 of the RU5534 MR biosignatures at UHF).
+    In addition, funding by the National Institutes of Health (NIH),
+    R01 EB024532 and P41 EB017183, is gratefully acknowledged.
 
     % ************************************************************************ %
     \section*{Data and code available statement}
@@ -1221,7 +1253,7 @@
         and Dr.~Zhiyong Zhang for sharing the SPA-LLR source code
         (\url{https://github.com/ZZgroupSJTU/PMCmsDTI}) on GitHub.
         The authors also thank Dr.~Philipp Ehses for the discussion on
-        the use of twixtools (\url{https://github.com/pehses/twixtools}).
+        twixtools (\url{https://github.com/pehses/twixtools}).
 
     %% The Appendices part is started with the command \appendix;
     %% appendix sections are then done as normal sections

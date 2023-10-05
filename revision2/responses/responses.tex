@@ -99,7 +99,7 @@
         (e.g.~before shot combination). \\
         We added "potential synergies between their LLR and the denoiser"
         into Discussion.
-        \item [c)] We added back the three-shell data. \hl{TODO} }
+        \item [c)] We added back the three-shell data.}
     \end{enumerate}
 
     \item [4)] \textit{Description of these experiments is misleading at times:
@@ -109,7 +109,7 @@
         \end{enumerate}}
 
     \begin{itemize} {\color{blue}
-        \item [a)] Please refer to your minor comment 9 for responses.
+        \item [a)] Please refer to your minor comment 9) for responses.
         \item [b)] Thank you for the suggestion.
         We agreed that LLR-IRPA improves
         the reconstruction for non-overlapping blocks.
@@ -126,6 +126,7 @@
     \item [7)] \textit{Still unclear how do you select the slice / diffusion encoding of snapshots provided in Figs. 4-9. Also, caption of Fig. 5, "retrospecitvely" $\rightarrow$ "retrospectively"}
 
     \hspace{1em} {\color{blue}
+    We tried to select representative slices.
     Figures 4 and 5 show a slice containing the globus pallidus
     with strong $T_2$-weighted contrast.
     Figure 6 selects a slice with a suspicious lesion
@@ -176,7 +177,11 @@
         to avoid misunderstanding.
         But we agreed that after the reconstruction of all slices,
         3D-patch-based denoising can be used as a postprocessing step.
-        We put this into Discussion.}
+        We put this into Discussion.
+        On the other hand, please refer to the figure in
+        \url{https://github.com/ZhengguoTan/demo_jets_diffusion_mri_7t}
+        for the illustration of the construction of the forward model
+        in our proposed reconstruction.}
     \end{enumerate}
 
     \item [7)] \textit{Please, use a symbol rather than "input" (L215) for clarity of this expression.}
@@ -189,6 +194,15 @@
     \hspace{1em} {\color{blue} We removed the "efficiency" statement.}
 
     \item [9)] \textit{This comment is not satisfactorily addressed. In new Fig. 6b we still see higher noise for larger block sizes, so my previous comment, "may appear counter-intuitive as small block sizes should aid with localization and therefore prevent blurring, at the price of less information for denoising? Can you clarify on reasons / potential hidden factors for this behaviour?" may still be relevant.}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\textwidth]{singular_values.png}
+        \caption{Mean singular values under different block widths.
+        Since square blocks are used here, the block size is equal to
+        the square of the width.}
+        \label{FIG:SVAL}
+    \end{figure}
 
     \hspace{1em} {\color{blue} Very good insight.
     This is connected to your major comment 4a)
@@ -203,10 +217,13 @@
     is described here (\url{https://mrtrix.readthedocs.io/en/dev/reference/commands/dwidenoise.html}),
     which suggests selecting "the smallest isotropic patch size
     that exceeds the number of DW images".
-    Therefore, the potential hidden factor is that
-    although small block sizes aid with localization,
-    one also need to construct a "balanced" matrix
-    (block size $\approx$ diffusion encoding length) for SVT.
+
+    \hspace{1em} We provide another notebook for explanations (\url{https://github.com/ZhengguoTan/demo_jets_diffusion_mri_7t/blob/main/demo_llr.ipynb}).
+    As shown in \cref{FIG:SVAL}, larger block sizes lead to
+    larger singular values, and thus also result in higher noise
+    when the singular value thresholding value is kept consistent
+    for different block sizes. Therefore, different block sizes require
+    different singular value thresholds.
     }
 
     \item [11)] \textit{Sorry, I don't see that this has been attended.}
@@ -243,7 +260,12 @@ its potential reproducibility still remain.}
 
 \textit{I am happy that the Authors now state that they measured three subjects in the Methods section, but the presented data still only seem to show a single subject (e.g. in Fig. 9). Perhaps the Authors used a different subject for each separate experiment? Nevertheless, I would really like to see data from more than one subject for each experiment, even if this is put into an Appendix or Supplementary Information. Reproducing results in more than one subject is important to evaluate whether a method gives good results outside of a single (often "best") subject. If the main results do really each rely only on a single subject, I would strongly argue that each result should be reproduced in another subject before publication.}
 
-\hspace{1em} {\color{blue} \hl{TODO}}
+    {\color{blue} Thank you for your comment.
+    Because of the measurement time constraint,
+    we used a different subject for each separate experiment.
+
+    We recruited another subject to reproduce the results.
+    Please refer to Supplementary Information for the results.}
 
 
 \noindent \textit{\#\# Checkerboard artefact suppression (pg.~15)}
@@ -322,13 +344,14 @@ concerning language issues.}
     \item \textit{pg.~22: First, we varied the regularization strength $\lambda$ from 0, to 0.08, and to 0.16. $\leftarrow$ First, we varied the regularization strength $\lambda$. We tested values of 0, 0.08, and 0.16.}
     \item \textit{pg.~22: "i.e., reduced noise" What does this mean? Perhaps you need to be more explicit?}
 
-    \hspace{1em} {\color{blue} \hl{TODO}}
+    \hspace{1em} {\color{blue} Done.}
 
     \item \textit{pg.~24: ...with the use of 5-shot acquisition. $\leftarrow$ ...with the use of a 5-shot acquisition.}
     \item \textit{pg.~24: When compared to the single-shot acquisition... $\leftarrow$ When compared to a single-shot acquisition}
     \item \textit{Fig. 8: The TRACE image at the bottom right seems to show aliasing near the bottom. Do you have an explanation for this?}
 
-    \hspace{1em} {\color{blue} \hl{TODO}}
+    \hspace{1em} {\color{blue} This may be caused by
+    $B_1$ field inhmogeneity from the lower brain region. }
 
     \item \textit{pg.~29: ...MRI protocols in 7 T, e.g., 3-scan trace acquisition... $\leftarrow$ ...MRI protocols at 7 T, e.g., a 3-scan trace acquisition...}
     \item \textit{pg.~30: "The standard distortion correction method is known as TOPUP (Andersson et al., 2003), which acquires two scans with opposing phase-encoding directions to obtain the field inhomogeneity map and then performs conjugate phase reconstruction to correct for distortion." The B0 map does not need to come from TOPUP. Why not just collect a B0 map from multiecho data and incorporate it into the reconstruction? Often the multiecho data used to create SENSE maps for coil combination is used for this purpose.}
