@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2.5cm,bottom=2.5cm,outer=2.5cm,inner=2.0cm]{geometry}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[noabbrev,capitalise]{cleveref}
+\usepackage{colortbl}
+\usepackage{color,soul}
+\usepackage{xcolor}
+
+\usepackage{enumitem}
+% \setlist[enumerate,1]{label=\color{blue}(\arabic*)}
+\setlist[enumerate,1]{label=(\arabic*)}
+
+\usepackage{graphicx}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks = true,
+	linkbordercolor = {white},
+}
+
+\usepackage{listings}
+
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.3}
+
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{subcaption}
+
+
+\begin{document}
+
+\begin{center}
+	{\large\textbf{Imaging Neuroscience \#203: Responses to Editors and Reviewers}}
+\end{center}
+
+% Robin: cortex / brain stem / hippocampus /
+
+% ========================================
+%     Editor
+% ========================================
+\noindent \underline{\textbf{Editor}}
+
+\noindent \textit{Dear Zhengguo Tan,\\
+\newline
+Thanks again for your submission. We would like to give you the opportunity to revise your paper.\\
+\newline
+The reviews are largely satisfied with this revision but have a few very minor points that you might consider.\\
+\newline
+You can access reviews and submit your revision here: \url{http://janeway.imaging-neuroscience.org/review/article/203/revisions/152/}\\
+\newline
+Your revisions are due on Jan. 12, 2024.\\
+\newline
+Regards,\\
+Bruce Pike\\
+\newline
+Imaging Neuroscience}
+
+{\color{blue} Thank you for the opportunity
+to provide another revision.
+We believe that this revision has further improved the quality
+of the manuscript and hope that it is ready for publication now.}
+
+\vspace{2em}
+
+% ========================================
+%     Reviewer 1071
+% ========================================
+\noindent \underline{\textbf{Reviewer \#1071}}
+
+\textit{Authors have addressed many of my previous comments but a few pending issues persist:}
+
+\begin{enumerate}
+    \item [3.b.1)] \textit{Thanks for the experiment. Think I had a different implementation of MUSE reconstruction in mind when I suggested this experiment. I understand that effect would be negligible for low resolution reconstructions. I appreciate the effort but newly added result may distract from message of paper and does not add much. Therefore, I'd remove it.}
+
+    \hspace{1em} {\color{blue} Thank you for the suggestion.
+    We feel this additional experiment that you suggested
+    in a previous revision round adds value to the manuscript
+    and we chose to keep it.}
+
+    \item [3.b.2)] \textit{I don't think that current discussion is focusing on synergies rather than on similarities. This might be fine, but I suggest to rephrase to provide opinion on whether these methods could complement each other or not.}
+
+    \hspace{1em} {\color{blue} Thank you for the specific suggestion. We rewrote this paragraph. Please refer to the highlighted manuscript with the note R1071.3.b.2.}
+
+    \item [4.a)] \textit{Caption Fig. 6b: "varying block width, keeping lambda 0.08 and stride 1" $\rightarrow$ "varying block width, keeping lambda as 0.08 and stride as 1"}
+
+    \hspace{1em} {\color{blue} Done.}
+
+    \item [7)] \textit{L336: "Figs. 6 and 7 select" $\rightarrow$ "Figs. 6 and 7 show"\\
+    L338: "the lower brain region which identifies the" $\rightarrow$ "an inferior brain region with marked"\\
+    L339: "the middle" $\rightarrow$ "a middle"
+    L440: "the upper brain" $\rightarrow$ "a superior brain"}
+
+    \hspace{1em} {\color{blue} Done.}
+
+    \item [9)] \textit{Thanks for testing the normalization. Seems it is an appropriate prevention for differentiating lambda levels and block size effects. In my opinion authors should replace current Fig. 6 with normalized counterpart, identify new optimal set of parameters, incorporate normalization to manuscript methods, and rerun paper experiments with new optimal configuration.}
+
+    \hspace{1em} {\color{blue} Thank you for the suggestion.
+    We included the normalization strategy in the manuscript.}
+
+    \item [12)] \textit{L270-271: "and even partially removes phase variation" $\rightarrow$ "and partially removes phase variation"}
+
+    \hspace{1em} {\color{blue} Done.}
+
+\end{enumerate}
+
+\end{document}
