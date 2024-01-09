@@ -1,0 +1,93 @@
+\documentclass[a4paper,11pt,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2.5cm,bottom=2.5cm,outer=2.5cm,inner=2.0cm]{geometry}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[noabbrev,capitalise]{cleveref}
+\usepackage{colortbl}
+\usepackage{color,soul}
+\usepackage{xcolor}
+
+\usepackage{enumitem}
+% \setlist[enumerate,1]{label=\color{blue}(\arabic*)}
+\setlist[enumerate,1]{label=(\arabic*)}
+
+\usepackage{graphicx}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks = true,
+	linkbordercolor = {white},
+}
+
+\usepackage{listings}
+
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.3}
+
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{subcaption}
+
+
+\begin{document}
+
+\begin{center}
+	{\large\textbf{Imaging Neuroscience \#203: Responses to Editors and Reviewers}}
+\end{center}
+
+% Robin: cortex / brain stem / hippocampus /
+
+% ========================================
+%     Editor
+% ========================================
+\noindent \underline{\textbf{Editor}}
+
+\noindent \textit{Dear Zhengguo Tan,\\
+\newline
+Thanks again for your submission. We would like to give you the opportunity to revise your paper.\\
+\newline
+This is a very minor revision request with only a couple of minor details remaining.\\
+\newline
+You can access reviews and submit your revision here: \url{http://janeway.imaging-neuroscience.org/review/article/203/revisions/161/}\\
+\newline
+Your revisions are due on Jan. 19, 2024.\\
+\newline
+Regards,\\
+Bruce Pike\\
+\newline
+Imaging Neuroscience}
+
+\vspace{2em}
+
+% ========================================
+%     Reviewer 1071
+% ========================================
+\noindent \underline{\textbf{Reviewer \#1116}}
+
+\noindent \textit{Authors have addressed most of my previous comments. Only exception could be the following:}
+
+\hspace{1em} \textcolor{blue}{Thank you for your constructive reviews in all rounds.}
+
+\begin{enumerate}
+    \item [9)] \textit{A few pending points yet to be considered:}
+
+    \item [9a)] \textit{L308: "We tested values of 0, 0.08, and 0.16", these should be changed by new values.}
+
+    \hspace{1em} \textcolor{blue}{Thank you. We corrected these values.}
+
+    \item [9b)] \textit{L319: "Here, the block width of 3 shows the best denoising as compared to 6 and 9, especially in the peripheral brain region" $\rightarrow$ but in Figure 6 you enhance block width of 6 as best case? Importantly, visually unclear which one is providing best denoising results now, so this may need a different reasoning or illustrative example.}
+
+    \hspace{1em} \textcolor{blue}{Thank you. We removed this sentence and
+    added another illustrative example in Supporting Information
+    to support the use of 6 as the block width.}
+
+\end{enumerate}
+
+\end{document}
